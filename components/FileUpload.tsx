@@ -1,10 +1,11 @@
 'use client';
 
 import { useCallback, useState, useRef } from 'react';
-import { Upload, FileText, CheckCircle, AlertCircle, X, Sparkles, Cloud, Zap } from 'lucide-react';
+import { Upload, FileText, CheckCircle, AlertCircle, X, Sparkles, Cloud, Zap, Shield, Brain } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import Image from 'next/image';
 
 interface UploadResponse {
   success: boolean;
@@ -147,7 +148,7 @@ export const FileUpload = ({ onUploadSuccess }: FileUploadProps) => {
 
   return (
     <div className="space-y-8">
-      {/* Upload Area */}
+      {/* Upload Area - Exklusives Design */}
       <div className="relative">
         <input
           ref={fileInputRef}
@@ -165,10 +166,10 @@ export const FileUpload = ({ onUploadSuccess }: FileUploadProps) => {
             transition-all duration-500 cursor-pointer group overflow-hidden
             ${
               isDragActive
-                ? 'border-blue bg-gradient-to-br from-blue/10 to-achieve-ka/10 scale-[1.02] shadow-2xl'
+                ? 'border-gray-900 bg-gradient-to-br from-gray-900/10 to-gray-800/10 scale-[1.02] shadow-2xl'
                 : isUploading
-                ? 'border-yellow bg-gradient-to-br from-yellow/10 to-orange/10'
-                : 'border-gray-200 hover:border-blue/50 bg-gradient-to-br from-white to-blue/5 hover:shadow-xl'
+                ? 'border-yellow-500 bg-gradient-to-br from-yellow-500/10 to-orange/10'
+                : 'border-gray-300 hover:border-gray-900/50 bg-white hover:shadow-xl'
             }
           `}
           onDrop={onDrop}
@@ -176,23 +177,23 @@ export const FileUpload = ({ onUploadSuccess }: FileUploadProps) => {
           onDragLeave={onDragLeave}
           onClick={() => !isUploading && fileInputRef.current?.click()}
         >
-          {/* Background Animation */}
-          <div className="absolute inset-0 opacity-30">
-            <div className="absolute top-10 left-10 w-32 h-32 bg-gradient-to-br from-blue/20 to-transparent rounded-full blur-3xl animate-pulse" />
-            <div className="absolute bottom-10 right-10 w-40 h-40 bg-gradient-to-br from-achieve-ka/20 to-transparent rounded-full blur-3xl animate-pulse delay-1000" />
+          {/* Background Animation - Exklusiv */}
+          <div className="absolute inset-0 opacity-20">
+            <div className="absolute top-10 left-10 w-32 h-32 bg-gradient-to-br from-gray-900/20 to-transparent rounded-full blur-3xl animate-pulse" />
+            <div className="absolute bottom-10 right-10 w-40 h-40 bg-gradient-to-br from-gray-700/20 to-transparent rounded-full blur-3xl animate-pulse delay-1000" />
           </div>
 
           <div className="relative z-10 flex flex-col items-center justify-center text-center space-y-6">
-            {/* Icon */}
+            {/* Icon - Premium Design */}
             <div className="relative">
               <div className={`
                 w-24 h-24 rounded-3xl flex items-center justify-center transition-all duration-500
                 ${
                   isDragActive
-                    ? 'bg-gradient-to-br from-blue to-achieve-ka scale-110 shadow-2xl'
+                    ? 'bg-gradient-to-br from-gray-900 to-gray-700 scale-110 shadow-2xl'
                     : isUploading
-                    ? 'bg-gradient-to-br from-yellow to-orange animate-pulse'
-                    : 'bg-gradient-to-br from-blue/10 to-achieve-ka/10 group-hover:scale-110 group-hover:shadow-xl'
+                    ? 'bg-gradient-to-br from-yellow-500 to-orange animate-pulse'
+                    : 'bg-gradient-to-br from-gray-900 to-gray-800 group-hover:scale-110 group-hover:shadow-xl'
                 }
               `}>
                 {isUploading ? (
@@ -200,32 +201,32 @@ export const FileUpload = ({ onUploadSuccess }: FileUploadProps) => {
                 ) : isDragActive ? (
                   <Zap className="w-12 h-12 text-white" />
                 ) : (
-                  <Upload className="w-12 h-12 text-blue group-hover:text-achieve-ka transition-colors duration-500" />
+                  <Upload className="w-12 h-12 text-white" />
                 )}
               </div>
               
               {isDragActive && (
-                <div className="absolute -inset-4 border-2 border-blue rounded-full animate-ping" />
+                <div className="absolute -inset-4 border-2 border-gray-900 rounded-full animate-ping" />
               )}
             </div>
 
-            {/* Text Content */}
+            {/* Text Content - Exklusiv */}
             <div className="space-y-4">
               <h3 className={`
                 text-3xl font-bold transition-all duration-500
                 ${
                   isDragActive
-                    ? 'text-blue scale-105'
+                    ? 'text-gray-900 scale-105'
                     : isUploading
-                    ? 'text-yellow'
-                    : 'text-gray-950 group-hover:text-blue'
+                    ? 'text-yellow-600'
+                    : 'text-gray-900 group-hover:text-gray-800'
                 }
               `}>
                 {isUploading
-                  ? 'Wird hochgeladen...'
+                  ? 'Wird verarbeitet...'
                   : isDragActive
                   ? 'Datei hier ablegen!'
-                  : 'CV hochladen'
+                  : 'Acme Inc. CV-Analyse'
                 }
               </h3>
               
@@ -233,35 +234,35 @@ export const FileUpload = ({ onUploadSuccess }: FileUploadProps) => {
                 text-lg transition-all duration-500
                 ${
                   isDragActive
-                    ? 'text-blue/80'
+                    ? 'text-gray-800'
                     : isUploading
-                    ? 'text-yellow/80'
-                    : 'text-gray-950'
+                    ? 'text-yellow-600'
+                    : 'text-gray-700'
                 }
               `}>
                 {isUploading
-                  ? 'Ihre Datei wird verarbeitet...'
+                  ? 'Ihre Datei wird analysiert und pseudonymisiert...'
                   : isDragActive
                   ? 'Lassen Sie die Datei los, um sie hochzuladen'
-                  : 'Ziehen Sie eine Datei hierher oder klicken Sie zum Auswählen'
+                  : 'Premium KI-Analyse mit vollständiger DSGVO-Anonymisierung'
                 }
               </p>
 
               {!isUploading && !isDragActive && (
-                <div className="flex flex-wrap justify-center gap-3 text-sm text-gray-950">
-                  <span className="flex items-center gap-1 bg-white/80 px-3 py-2 rounded-xl border border-gray-200">
+                <div className="flex flex-wrap justify-center gap-3 text-sm text-gray-700">
+                  <span className="flex items-center gap-1 bg-white px-3 py-2 rounded-xl border border-gray-300 shadow-sm">
                     <FileText className="h-4 w-4" />
                     PDF
                   </span>
-                  <span className="flex items-center gap-1 bg-white/80 px-3 py-2 rounded-xl border border-gray-200">
+                  <span className="flex items-center gap-1 bg-white px-3 py-2 rounded-xl border border-gray-300 shadow-sm">
                     <FileText className="h-4 w-4" />
                     DOC
                   </span>
-                  <span className="flex items-center gap-1 bg-white/80 px-3 py-2 rounded-xl border border-gray-200">
+                  <span className="flex items-center gap-1 bg-white px-3 py-2 rounded-xl border border-gray-300 shadow-sm">
                     <FileText className="h-4 w-4" />
                     DOCX
                   </span>
-                  <span className="bg-blue/10 text-blue px-3 py-2 rounded-xl border border-blue/20 font-medium">
+                  <span className="bg-gray-900 text-white px-3 py-2 rounded-xl font-medium shadow-lg">
                     Max. 10 MB
                   </span>
                 </div>
@@ -275,7 +276,7 @@ export const FileUpload = ({ onUploadSuccess }: FileUploadProps) => {
                   value={uploadProgress} 
                   className="h-3 bg-gray-200"
                 />
-                <p className="text-sm text-gray-950 flex items-center justify-center gap-2">
+                <p className="text-sm text-gray-700 flex items-center justify-center gap-2">
                   <Sparkles className="h-4 w-4 animate-spin" />
                   {Math.round(uploadProgress)}% abgeschlossen
                 </p>
@@ -285,14 +286,14 @@ export const FileUpload = ({ onUploadSuccess }: FileUploadProps) => {
         </div>
       </div>
 
-      {/* Status Messages */}
+      {/* Status Messages - Premium Design */}
       {(errorMessage || successMessage) && (
         <div className={`
           max-w-2xl mx-auto p-6 rounded-2xl border-2 shadow-lg transition-all duration-500
           ${
             errorMessage
               ? 'bg-gradient-to-r from-red/5 to-orange/5 border-red/20'
-              : 'bg-gradient-to-r from-green/5 to-mint-100 border-green/20'
+              : 'bg-gradient-to-r from-green/5 to-emerald/5 border-green/20'
           }
         `}>
           <div className="flex items-start justify-between">
@@ -302,22 +303,22 @@ export const FileUpload = ({ onUploadSuccess }: FileUploadProps) => {
                 ${errorMessage ? 'bg-red/10' : 'bg-green/10'}
               `}>
                 {errorMessage ? (
-                  <AlertCircle className="h-6 w-6 text-red" />
+                  <AlertCircle className="h-6 w-6 text-red-600" />
                 ) : (
-                  <CheckCircle className="h-6 w-6 text-green" />
+                  <CheckCircle className="h-6 w-6 text-green-600" />
                 )}
               </div>
               <div className="space-y-2">
-                <h4 className={`text-lg font-bold ${errorMessage ? 'text-red' : 'text-green'}`}>
+                <h4 className={`text-lg font-bold ${errorMessage ? 'text-red-600' : 'text-green-600'}`}>
                   {errorMessage ? 'Fehler beim Upload' : 'Upload erfolgreich!'}
                 </h4>
-                <p className={`${errorMessage ? 'text-red/80' : 'text-green/80'}`}>
+                <p className={`${errorMessage ? 'text-red-700' : 'text-green-700'}`}>
                   {errorMessage || successMessage}
                 </p>
                 {successMessage && (
-                  <p className="text-sm text-gray-950 flex items-center gap-2 mt-3">
+                  <p className="text-sm text-gray-700 flex items-center gap-2 mt-3">
                     <Sparkles className="h-4 w-4 animate-pulse" />
-                    Sie werden automatisch zum Kandidatenprofil weitergeleitet...
+                    Sie werden automatisch zum pseudonymisierten Profil weitergeleitet...
                   </p>
                 )}
               </div>
@@ -326,7 +327,7 @@ export const FileUpload = ({ onUploadSuccess }: FileUploadProps) => {
               variant="ghost"
               size="sm"
               onClick={clearMessage}
-              className="text-gray-500 hover:text-gray-950"
+              className="text-gray-500 hover:text-gray-700"
             >
               <X className="h-5 w-5" />
             </Button>
@@ -334,12 +335,12 @@ export const FileUpload = ({ onUploadSuccess }: FileUploadProps) => {
         </div>
       )}
 
-      {/* Recently Uploaded Files */}
+      {/* Recently Uploaded Files - Premium Style */}
       {uploadedFiles.length > 0 && (
         <div className="max-w-2xl mx-auto space-y-4">
-          <h3 className="text-xl font-bold text-gray-950 flex items-center gap-2">
-            <CheckCircle className="h-5 w-5 text-green" />
-            Erfolgreich hochgeladen
+          <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+            <CheckCircle className="h-5 w-5 text-green-600" />
+            Erfolgreich verarbeitet
           </h3>
           <div className="space-y-3">
             {uploadedFiles.map((file, index) => (
@@ -349,15 +350,15 @@ export const FileUpload = ({ onUploadSuccess }: FileUploadProps) => {
                 onClick={() => router.push(`/candidate/${file.id}`)}
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-green/10 rounded-xl flex items-center justify-center">
-                    <FileText className="h-6 w-6 text-green" />
+                  <div className="w-12 h-12 bg-gray-900 rounded-xl flex items-center justify-center">
+                    <FileText className="h-6 w-6 text-white" />
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-semibold text-gray-950">{file.name || file.fileName}</h4>
-                    <p className="text-sm text-gray-950">Klicken Sie hier, um das Profil anzuzeigen</p>
+                    <h4 className="font-semibold text-gray-900">{file.name || file.fileName}</h4>
+                    <p className="text-sm text-gray-600">Pseudonymisiert • DSGVO-konform</p>
                   </div>
-                  <Button variant="outline" size="sm" className="rounded-xl">
-                    Ansehen →
+                  <Button variant="outline" size="sm" className="rounded-xl border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white">
+                    Profil ansehen →
                   </Button>
                 </div>
               </div>
@@ -366,32 +367,60 @@ export const FileUpload = ({ onUploadSuccess }: FileUploadProps) => {
         </div>
       )}
 
-      {/* Info Section */}
-      <div className="max-w-4xl mx-auto bg-gradient-to-r from-achieve-ka/5 to-blue/5 rounded-3xl p-8 border border-achieve-ka/10">
+      {/* Info Section - Exklusives Design */}
+      <div className="max-w-4xl mx-auto bg-gradient-to-r from-gray-900 to-gray-800 rounded-3xl p-8 shadow-2xl">
         <div className="text-center space-y-6">
-          <h3 className="text-2xl font-bold text-gray-950">Wie funktioniert's?</h3>
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <div className="w-16 h-16 bg-white rounded-3xl flex items-center justify-center shadow-2xl p-2">
+              <Image 
+                src="/logo-white.svg" 
+                alt="Acme Inc Logo" 
+                width={48} 
+                height={48} 
+                className="invert"
+              />
+            </div>
+            <h3 className="text-2xl font-bold text-white">Acme Inc. Premium CV-Analyse</h3>
+          </div>
+          <p className="text-gray-200 mb-8">Professioneller 3-Stufen-Prozess für exklusive Kandidatenprofile</p>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="space-y-3">
-              <div className="w-16 h-16 bg-blue/10 rounded-2xl flex items-center justify-center mx-auto">
-                <Upload className="h-8 w-8 text-blue" />
+              <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto">
+                <Upload className="h-8 w-8 text-gray-900" />
               </div>
-              <h4 className="font-semibold text-gray-950">1. Hochladen</h4>
-              <p className="text-sm text-gray-950">Laden Sie den Lebenslauf als PDF oder Word-Dokument hoch</p>
+              <h4 className="font-semibold text-white">1. Sicherer Upload</h4>
+              <p className="text-sm text-gray-200">Sichere Übertragung mit modernster Verschlüsselung</p>
             </div>
             <div className="space-y-3">
-              <div className="w-16 h-16 bg-yellow/10 rounded-2xl flex items-center justify-center mx-auto">
-                <Zap className="h-8 w-8 text-yellow" />
+              <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto">
+                <Brain className="h-8 w-8 text-gray-900" />
               </div>
-              <h4 className="font-semibold text-gray-950">2. KI-Analyse</h4>
-              <p className="text-sm text-gray-950">Unsere KI extrahiert automatisch alle relevanten Informationen</p>
+              <h4 className="font-semibold text-white">2. KI-Analyse & Pseudonymisierung</h4>
+              <p className="text-sm text-gray-200">Intelligente Extraktion mit sofortiger DSGVO-konformer Anonymisierung</p>
             </div>
             <div className="space-y-3">
-              <div className="w-16 h-16 bg-green/10 rounded-2xl flex items-center justify-center mx-auto">
-                <CheckCircle className="h-8 w-8 text-green" />
+              <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto">
+                <Shield className="h-8 w-8 text-gray-900" />
               </div>
-              <h4 className="font-semibold text-gray-950">3. Profil ansehen</h4>
-              <p className="text-sm text-gray-950">Betrachten Sie das strukturierte Kandidatenprofil</p>
+              <h4 className="font-semibold text-white">3. Premium Profil</h4>
+              <p className="text-sm text-gray-200">Hochwertiges, DSGVO-konformes Kandidatenprofil verfügbar</p>
             </div>
+          </div>
+          
+          {/* Status Indicators */}
+          <div className="flex items-center justify-center gap-8 text-gray-200 mt-8">
+            <span className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse" />
+              <span className="font-medium">System Online</span>
+            </span>
+            <span className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-blue-400 rounded-full animate-pulse delay-300" />
+              <span className="font-medium">Pseudonymisierung Active</span>
+            </span>
+            <span className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-yellow-400 rounded-full animate-pulse delay-700" />
+              <span className="font-medium">DSGVO-konform</span>
+            </span>
           </div>
         </div>
       </div>

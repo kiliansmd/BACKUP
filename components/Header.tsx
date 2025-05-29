@@ -12,18 +12,18 @@ export const Header = () => {
       <div className="container mx-auto px-4 py-4">
         <Link href="/" className="text-xl font-bold text-gray-950">
           CV-Portal
-        </Link>
-        
+          </Link>
+          
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-6">
-          <Link 
-            href="/" 
+            <Link
+              href="/"
             className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-              pathname === '/' 
+                pathname === '/'
                 ? 'bg-achieve-ka text-white'
                 : 'text-gray-950 hover:bg-gray-50'
-            }`}
-          >
+              }`}
+            >
             Alle Kandidaten
           </Link>
           <Link 
@@ -35,18 +35,18 @@ export const Header = () => {
             }`}
           >
             CV hochladen
-          </Link>
-          <Link
-            href="/resumes"
+            </Link>
+            <Link
+              href="/resumes"
             className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-              pathname === '/resumes'
+                pathname === '/resumes'
                 ? 'bg-achieve-ka text-white'
                 : 'text-gray-950 hover:bg-gray-50'
-            }`}
-          >
-            View Resumes
-          </Link>
-        </nav>
+              }`}
+            >
+              View Resumes
+            </Link>
+          </nav>
       </div>
     </header>
   );

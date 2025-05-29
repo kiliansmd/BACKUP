@@ -6,12 +6,15 @@ import { KandidatenProfile } from '@/components/kandidaten-profile';
 import { ResumeSkeleton } from '@/components/ui/resume-skeleton';
 import { BreadcrumbNav } from '@/components/ui/breadcrumb-nav';
 import { MobileMenu } from '@/components/MobileMenu';
+import { PseudonymizationDebug } from '@/components/PseudonymizationDebug';
 import { appConfig } from '@/config/app.config';
 import type { Kandidat, AccountManager, NavigationItem } from '@/types/kandidat';
 import { useToast } from '@/hooks/use-toast';
 import { transformKandidatenDaten } from '@/utils/data-transformer';
 import { db } from '@/lib/firebase';
 import { notFound } from 'next/navigation';
+import { pseudonymizeProfile } from '@/utils/pseudonymizer';
+import type { PseudonymizationResult } from '@/types/pseudonymized';
 
 interface ParsedResume {
   name?: string;
@@ -86,6 +89,7 @@ interface ParsedResume {
 export default function CandidateDetailsPage() {
   const { id } = useParams();
   const [resumeData, setResumeData] = useState<ParsedResume | null>(null);
+  const [pseudonymizationMetadata, setPseudonymizationMetadata] = useState<PseudonymizationResult['metadata'] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
@@ -111,7 +115,42 @@ export default function CandidateDetailsPage() {
         }
         
         console.log("Fetched resume data:", data);
-        setResumeData(data);
+        
+        // 🔒 APPLY PSEUDONYMIZATION IMMEDIATELY AFTER FETCH
+        // Convert resume data to Kandidat format first, then pseudonymize
+        const kandidatData = mapResumeToKandidat(data);
+        
+        // Apply pseudonymization with sequential naming based on ID
+        const candidateIndex = typeof id === 'string' ? parseInt(id.slice(-1)) || 0 : 0;
+        const pseudonymizationOptions = {
+          candidateIndex,
+          devMode: process.env.NODE_ENV === 'development',
+          preserveChronology: true,
+          dateShiftRange: 2
+        };
+        
+        const pseudonymizationResult = pseudonymizeProfile(kandidatData, pseudonymizationOptions);
+        
+        // Convert pseudonymized Kandidat back to ParsedResume format for compatibility
+        const pseudonymizedResumeData = mapKandidatToResume(pseudonymizationResult.data);
+        
+        // Store both pseudonymized data and metadata
+        setResumeData(pseudonymizedResumeData);
+        setPseudonymizationMetadata(pseudonymizationResult.metadata);
+        
+        // Development mode: Log pseudonymization results
+        if (process.env.NODE_ENV === 'development') {
+          console.group('🔒 Pseudonymization Applied');
+          console.log('Original data PII detected:', pseudonymizationResult.metadata.originalDataDetected);
+          console.log('Transformations applied:', pseudonymizationResult.metadata.transformationsApplied);
+          console.log('Pseudonymized data preview:', {
+            name: pseudonymizationResult.data.name,
+            location: pseudonymizationResult.data.location?.city,
+            companies: pseudonymizationResult.data.work?.map(w => w.name)
+          });
+          console.groupEnd();
+        }
+        
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : 'Failed to fetch resume data';
         setError(errorMessage);
@@ -275,6 +314,58 @@ export default function CandidateDetailsPage() {
     };
   };
 
+  // Helper function to convert Kandidat back to ParsedResume format for compatibility
+  const mapKandidatToResume = (kandidat: any): ParsedResume => {
+    return {
+      name: kandidat.name,
+      title: kandidat.position,
+      brief: kandidat.kurzprofil,
+      contact: {
+        location_city: kandidat.location?.city,
+        location_country: kandidat.location?.countryCode,
+        email: '', // Anonymized
+        phone: '', // Anonymized
+        linkedin: '', // Anonymized
+        github: null,
+        twitter: null,
+        website: null,
+      },
+      employment_history: kandidat.work?.map((job: any) => ({
+        company: job.name,
+        position: job.position,
+        startDate: job.startDate,
+        endDate: job.endDate,
+        description: job.achievements || []
+      })) || [],
+      education: kandidat.education?.map((edu: any) => ({
+        institution: edu.institution,
+        area: edu.area,
+        studyType: edu.studyType,
+        startDate: edu.startDate,
+        endDate: edu.endDate,
+        url: edu.url,
+        note: edu.note
+      })) || [],
+      skills: kandidat.kernthemen || [],
+      languages: kandidat.languages?.map((lang: any) => ({
+        language: lang.language,
+        fluency: lang.fluency
+      })) || [],
+      derived: {
+        years_of_experience: parseInt(kandidat.erfahrung?.split(' ')[0]) || 0,
+        approximate_age: undefined // Anonymized
+      },
+      certificates: kandidat.certificates || [],
+      publications: [],
+      interests: [],
+      references: [],
+      gehalt: kandidat.gehalt,
+      verfuegbarkeit: kandidat.verfuegbarkeit,
+      persoenlicheDaten: kandidat.persoenlicheDaten,
+      location: kandidat.location
+    };
+  };
+
   const mockAccountManager: AccountManager = {
     name: 'John Doe',
     position: 'Account Manager',
@@ -375,6 +466,14 @@ export default function CandidateDetailsPage() {
           navSections={navSections}
         />
       </main>
+
+      {/* Pseudonymization Debug Panel (Development Only) */}
+      {pseudonymizationMetadata && (
+        <PseudonymizationDebug 
+          metadata={pseudonymizationMetadata} 
+          className="print:hidden"
+        />
+      )}
     </>
   );
 } 

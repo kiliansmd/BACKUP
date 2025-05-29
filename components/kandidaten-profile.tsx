@@ -242,20 +242,28 @@ export function KandidatenProfile({
                 </div>
             </div> */}
 
-            {/* Header mit optimierten Kontrasten */}
-            <header className="text-white border-b border-gray-950 sticky top-0 z-50 no-print-element shadow-xl backdrop-blur-md" 
+            {/* Header mit exklusivem Design - 95% weißer Hintergrund */}
+            <header className="border-b border-gray-200 sticky top-0 z-50 no-print-element shadow-xl backdrop-blur-md" 
                 style={{ 
-                    background: 'linear-gradient(135deg, #4F46E5 0%, #6366F1 50%, #3B82F6 100%)'
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)'
                 }}>
                 <div className="container mx-auto px-4 py-2 sm:py-3 flex justify-between items-center">
                     <div className="flex items-center gap-4 sm:gap-8">
-                        <Image
-                            src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/getexperts_Logo%20white_2022_Logo-J8GvQFrl6vrMOgCpmr7p26XTKi8yl7.png"
-                            alt="getexperts Logo"
-                            width={180}
-                            height={40}
-                            className="h-6 sm:h-8 w-auto"
-                        />
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-gray-900 rounded-xl flex items-center justify-center shadow-lg p-2">
+                                <Image 
+                                    src="/logo-white.svg" 
+                                    alt="Acme Inc Logo" 
+                                    width={32} 
+                                    height={32} 
+                                    className="invert"
+                                />
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="text-lg font-bold text-gray-900">Acme Inc.</span>
+                                <span className="text-xs text-gray-600 hidden sm:block">Premium Recruiting</span>
+                            </div>
+                        </div>
 
                         {/* Navigation */}
                         <nav className="hidden md:flex items-center space-x-6">
@@ -263,10 +271,10 @@ export function KandidatenProfile({
                                 <a
                                     key={section.id}
                                     href={`#${section.id}`}
-                                    className="text-sm text-gray-200 hover:text-white transition-colors relative group font-medium"
+                                    className="text-sm text-gray-700 hover:text-gray-900 transition-colors relative group font-medium"
                                 >
                                     {section.label}
-                                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-blue to-royal-blue transition-all group-hover:w-full"></span>
+                                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-gray-700 to-gray-900 transition-all group-hover:w-full"></span>
                                 </a>
                             ))}
                         </nav>
@@ -280,7 +288,7 @@ export function KandidatenProfile({
                                     cvSection.scrollIntoView({ behavior: 'smooth' });
                                 }
                             }}
-                            className="bg-white/10 text-white border border-white/20 hover:bg-white/20 font-medium px-2 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm flex items-center gap-1 rounded-lg backdrop-blur-sm transition-all duration-200"
+                            className="bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200 font-medium px-2 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm flex items-center gap-1 rounded-lg backdrop-blur-sm transition-all duration-200"
                         >
                             <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4" />
                             Direkt zum CV
@@ -288,13 +296,13 @@ export function KandidatenProfile({
                         <Button
                             onClick={handlePrint}
                             disabled={isPrinting}
-                            className="bg-white/10 text-white hover:bg-white/20 border border-white/20 text-xs sm:text-sm px-2 py-1 sm:px-3 sm:py-2 flex items-center rounded-lg backdrop-blur-sm transition-all duration-200"
+                            className="bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300 text-xs sm:text-sm px-2 py-1 sm:px-3 sm:py-2 flex items-center rounded-lg backdrop-blur-sm transition-all duration-200"
                         >
                             <Printer className="mr-1 h-3 w-3 sm:h-4 sm:w-4" />
                             {isPrinting ? "Vorbereitung..." : "Drucken"}
                         </Button>
-                        <Button className="font-bold px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm rounded-lg transition-all duration-200 border-2 border-white shadow-lg hover:scale-105"
-                            style={{ backgroundColor: '#F59E0B', color: '#030712', borderColor: '#ffffff' }}
+                        <Button className="font-bold px-2 py-1 sm:px-4 sm:py-2 text-xs sm:text-sm rounded-lg transition-all duration-200 border-2 border-gray-900 shadow-lg hover:scale-105"
+                            style={{ backgroundColor: '#1a1a1a', color: '#ffffff', borderColor: '#1a1a1a' }}
                         >
                             Kontakt aufnehmen
                         </Button>
@@ -302,15 +310,23 @@ export function KandidatenProfile({
                 </div>
             </header>
 
-            {/* Hero Section - Optimierte Kontraste und harmonisches Design */}
-            <section className="text-white py-6 sm:py-8 lg:py-12 relative overflow-hidden" 
+            {/* Hero Section - Exklusives Premium Design mit 95% weißem Hintergrund */}
+            <section className="py-6 sm:py-8 lg:py-12 relative overflow-hidden" 
                 style={{ 
-                    background: 'linear-gradient(135deg, #4F46E5 0%, #6366F1 30%, #3B82F6 70%, #1E40AF 100%)'
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)'
                 }}>
-                {/* Subtle background patterns */}
-                <div className="absolute inset-0 opacity-10">
-                    <div className="absolute top-0 right-0 w-96 h-96 bg-blue rounded-full blur-3xl"></div>
-                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-achieve-mid rounded-full blur-3xl"></div>
+                {/* Subtile Hintergrund-Patterns für Exklusivität */}
+                <div className="absolute inset-0 opacity-5">
+                    <div className="absolute top-0 right-0 w-96 h-96 bg-gray-300 rounded-full blur-3xl"></div>
+                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-gray-400 rounded-full blur-3xl"></div>
+                    <div className="absolute top-1/3 left-1/3 w-32 h-32 bg-gray-500 rounded-full blur-2xl"></div>
+                </div>
+                
+                {/* Elegante geometrische Muster */}
+                <div className="absolute inset-0 opacity-3">
+                    <div className="absolute top-10 right-10 w-20 h-20 border border-gray-300 rotate-45"></div>
+                    <div className="absolute bottom-20 right-20 w-16 h-16 border border-gray-400 rotate-12"></div>
+                    <div className="absolute top-1/2 right-1/4 w-12 h-12 border border-gray-300 rotate-45"></div>
                 </div>
                 
                 <div className="container mx-auto px-4 relative z-10">
@@ -318,94 +334,94 @@ export function KandidatenProfile({
                         <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
                             <div className="w-full lg:w-2/3">
                                 <div className="flex flex-wrap items-center gap-2 mb-3">
-                                    <Badge className="bg-white/10 text-white border border-white/20 font-medium px-2 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm backdrop-blur-sm">
+                                    <Badge className="bg-gray-100 text-gray-800 border border-gray-300 font-medium px-2 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm backdrop-blur-sm">
                                         {kandidat.senioritaet} Expert Profile
                                     </Badge>
-                                    <Badge className="bg-achieve-ka/10 text-achieve-ka border border-achieve-ka/20 font-medium px-2 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm">
+                                    <Badge className="bg-green-50 text-green-700 border border-green-200 font-medium px-2 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm">
                                         Sofort verfügbar
                                     </Badge>
                                     <Badge
                                         variant="outline"
-                                        className="border-white/30 text-white font-medium px-2 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm bg-white/10 backdrop-blur-sm"
+                                        className="border-gray-400 text-gray-700 font-medium px-2 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm bg-gray-50 backdrop-blur-sm"
                                     >
-                                        <span className="text-yellow-300 mr-1">#</span>
+                                        <span className="text-amber-600 mr-1">#</span>
                                         7100001451223
                                     </Badge>
                                 </div>
 
-                                <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-heading-1 mb-1 text-white font-bold leading-tight">
+                                <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-heading-1 mb-1 text-gray-900 font-bold leading-tight">
                                     {kandidat.name}
                                 </h1>
-                                <h2 className="text-lg sm:text-xl md:text-heading-3 text-blue-100 font-medium mb-3 sm:mb-4">
+                                <h2 className="text-lg sm:text-xl md:text-heading-3 text-gray-700 font-medium mb-3 sm:mb-4">
                                     {kandidat.position}
                                 </h2>
 
                                 {/* Kompakte Grid für Key-Infos */}
                                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 mb-3 sm:mb-4">
-                                    <div className="flex items-center gap-1.5 text-white text-xs sm:text-sm">
-                                        <MapPin className="h-3 w-3 sm:h-4 sm:w-4 text-blue-300 flex-shrink-0" />
+                                    <div className="flex items-center gap-1.5 text-gray-700 text-xs sm:text-sm">
+                                        <MapPin className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500 flex-shrink-0" />
                                         <span className="truncate">{kandidat.standort}</span>
                                     </div>
-                                    <div className="flex items-center gap-1.5 text-white text-xs sm:text-sm">
-                                        <Calendar className="h-3 w-3 sm:h-4 sm:w-4 text-blue-300 flex-shrink-0" />
+                                    <div className="flex items-center gap-1.5 text-gray-700 text-xs sm:text-sm">
+                                        <Calendar className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500 flex-shrink-0" />
                                         <span className="truncate">{kandidat.verfuegbarkeit}</span>
                                     </div>
-                                    <div className="flex items-center gap-1.5 text-white text-xs sm:text-sm">
-                                        <Briefcase className="h-3 w-3 sm:h-4 sm:w-4 text-blue-300 flex-shrink-0" />
+                                    <div className="flex items-center gap-1.5 text-gray-700 text-xs sm:text-sm">
+                                        <Briefcase className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500 flex-shrink-0" />
                                         <span className="truncate">{kandidat.erfahrung}</span>
                                     </div>
-                                    <div className="flex items-center gap-1.5 text-white text-xs sm:text-sm">
-                                        <Award className="h-3 w-3 sm:h-4 sm:w-4 text-blue-300 flex-shrink-0" />
+                                    <div className="flex items-center gap-1.5 text-gray-700 text-xs sm:text-sm">
+                                        <Award className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500 flex-shrink-0" />
                                         <span className="truncate">{kandidat.gehalt}</span>
                                     </div>
                                 </div>
 
-                                {/* Kompakte Skills Tags */}
+                                {/* Kompakte Skills Tags mit dunklem Design */}
                                 <div className="flex flex-wrap gap-1.5 mt-2 sm:mt-3">
                                     {kandidat.kernthemen.slice(0, 6).map((thema, index) => (
-                                        <Badge key={index} variant="outline" className="border-white/30 bg-white/10 text-white text-xs backdrop-blur-sm px-2 py-0.5 hover:bg-white/20 transition-colors">
+                                        <Badge key={index} variant="outline" className="border-gray-300 bg-gray-50 text-gray-700 text-xs backdrop-blur-sm px-2 py-0.5 hover:bg-gray-100 transition-colors">
                                             {thema}
                                         </Badge>
                                     ))}
                                     {kandidat.kernthemen.length > 6 && (
-                                        <Badge variant="outline" className="border-white/30 bg-white/10 text-white text-xs backdrop-blur-sm px-2 py-0.5">
+                                        <Badge variant="outline" className="border-gray-300 bg-gray-50 text-gray-700 text-xs backdrop-blur-sm px-2 py-0.5">
                                             +{kandidat.kernthemen.length - 6} weitere
                                         </Badge>
                                     )}
                                 </div>
                             </div>
 
-                            {/* Quick Actions Sidebar */}
+                            {/* Premium Quick Actions Sidebar mit dunklem Design */}
                             <div className="w-full lg:w-1/3 lg:pl-6">
-                                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                                <div className="bg-gray-900 backdrop-blur-sm rounded-xl p-4 border border-gray-800 shadow-2xl">
                                     <h3 className="text-white font-semibold mb-3 text-sm flex items-center">
                                         <Clock className="h-4 w-4 mr-2" />
-                                        Schnellübersicht
+                                        Exklusive Schnellübersicht
                                     </h3>
                                     <div className="space-y-2 text-xs">
                                         <div className="flex justify-between items-center">
-                                            <span className="text-white/80">Verfügbarkeit:</span>
-                                            <span className="text-green-300 font-medium">{kandidat.verfuegbarkeit}</span>
+                                            <span className="text-gray-300">Verfügbarkeit:</span>
+                                            <span className="text-green-400 font-medium">{kandidat.verfuegbarkeit}</span>
                                         </div>
                                         <div className="flex justify-between items-center">
-                                            <span className="text-white/80">Erfahrung:</span>
+                                            <span className="text-gray-300">Erfahrung:</span>
                                             <span className="text-white font-medium">{kandidat.erfahrung}</span>
                                         </div>
                                         <div className="flex justify-between items-center">
-                                            <span className="text-white/80">Standort:</span>
+                                            <span className="text-gray-300">Standort:</span>
                                             <span className="text-white font-medium">{kandidat.standort}</span>
                                         </div>
                                         <div className="flex justify-between items-center">
-                                            <span className="text-white/80">Gehalt:</span>
+                                            <span className="text-gray-300">Gehalt:</span>
                                             <span className="text-white font-medium">{kandidat.gehalt}</span>
                                         </div>
                                     </div>
-                                    <div className="mt-4 pt-3 border-t border-white/20">
-                                        <Button className="w-full font-bold text-sm py-2 rounded-lg transition-all duration-200 border-2 border-white shadow-lg hover:scale-105"
-                                            style={{ backgroundColor: '#D4AF37', color: '#1e293b', borderColor: '#ffffff' }}
+                                    <div className="mt-4 pt-3 border-t border-gray-700">
+                                        <Button className="w-full font-bold text-sm py-2 rounded-lg transition-all duration-200 border-2 border-amber-500 shadow-lg hover:scale-105"
+                                            style={{ backgroundColor: '#D97706', color: '#ffffff', borderColor: '#D97706' }}
                                         >
                                             <Calendar className="mr-2 h-4 w-4" />
-                                            Termin vereinbaren
+                                            Premium Termin vereinbaren
                                         </Button>
                                     </div>
                                 </div>
@@ -1079,13 +1095,21 @@ export function KandidatenProfile({
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 mb-12">
                             {/* Company Info */}
                             <div className="lg:col-span-1">
-                                <Image
-                                    src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/getexperts_Logo%20white_2022_Logo-J8GvQFrl6vrMOgCpmr7p26XTKi8yl7.png"
-                                    alt="getexperts Logo"
-                                    width={180}
-                                    height={40}
-                                    className="h-8 w-auto mb-6"
-                                />
+                                <div className="flex items-center gap-3 mb-6">
+                                    <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-lg p-2">
+                                        <Image 
+                                            src="/logo-white.svg" 
+                                            alt="Acme Inc Logo" 
+                                            width={32} 
+                                            height={32} 
+                                            className="invert"
+                                        />
+                                    </div>
+                                    <div>
+                                        <div className="text-xl font-bold text-white">Acme Inc.</div>
+                                        <div className="text-gray-300 text-sm">Premium Recruiting Solutions</div>
+                                    </div>
+                                </div>
                                 <p className="text-gray-200 leading-relaxed mb-6 text-lg">
                                     Spezialisiert auf die Vermittlung hochqualifizierter IT-Experten und Führungskräfte für anspruchsvolle Projekte.
                                 </p>
@@ -1167,7 +1191,7 @@ export function KandidatenProfile({
                         {/* Footer Bottom */}
                         <div className="flex flex-col md:flex-row justify-between items-center pt-8">
                             <div className="text-gray-950 mb-4 md:mb-0">
-                                © {new Date().getFullYear()} getexperts GmbH. Alle Rechte vorbehalten.
+                                © {new Date().getFullYear()} Acme Inc. Alle Rechte vorbehalten.
                             </div>
                             <div className="flex gap-8 text-gray-950">
                                 <a href="#" className="hover:text-white transition-colors font-medium">
@@ -1189,7 +1213,7 @@ export function KandidatenProfile({
             <div className="hidden print-only mt-8 pt-4 border-t border-gray-200">
                 <div className="flex justify-between items-center">
                     <div className="text-sm text-gray-950">
-                        <p>© {new Date().getFullYear()} getexperts GmbH. Alle Rechte vorbehalten.</p>
+                        <p>© {new Date().getFullYear()} Acme Inc. Alle Rechte vorbehalten.</p>
                     </div>
                     <div className="text-sm text-gray-950">
                         <p>
@@ -1211,75 +1235,50 @@ export function KandidatenProfile({
                 <ChevronRight className="h-5 w-5 rotate-[-90deg]" />
             </a>
 
-            {/* Sticky Bottom Bar - Mit #625DF5 Farbe und Hilfe-Button */}
+            {/* Optimierte Sticky Bottom Bar - Schmal und ohne FAQ */}
             <div
                 className="fixed bottom-0 left-0 right-0 z-20 border-t border-gray-200 no-print-element shadow-2xl backdrop-blur-md"
                 style={{ 
-                    background: 'linear-gradient(135deg, #625DF5 0%, #7C3AED 50%, #8B5CF6 100%)',
-                    borderImage: 'linear-gradient(90deg, #625DF5, #8B5CF6) 1'
+                    backgroundColor: '#422DFF',
+                    borderImage: 'linear-gradient(90deg, #422DFF, #422DFF) 1'
                 }}
             >
-                <div className="container mx-auto px-4 py-4 sm:py-5">
-                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6">
-                        {/* Left side - Help Button */}
-                        <div className="flex items-center gap-4">
-                            <Button 
-                                onClick={() => {
-                                    const modal = document.getElementById('help-modal');
-                                    if (modal) {
-                                        modal.classList.remove('hidden');
-                                        modal.classList.add('flex');
-                                    }
-                                }}
-                                className="bg-white/10 text-white border border-white/20 hover:bg-white/20 font-medium px-3 py-2 text-sm flex items-center gap-2 rounded-xl backdrop-blur-sm transition-all duration-200"
-                            >
-                                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
-                                <span className="hidden sm:inline">Hilfe & FAQ</span>
-                                <span className="sm:hidden">Hilfe</span>
-                            </Button>
-                        </div>
-
-                        {/* Center - Main Content */}
-                        <div className="flex items-center gap-4 sm:gap-5 flex-1">
-                            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shadow-xl border-2 border-white/20 bg-white/10 backdrop-blur-sm">
-                                <Calendar className="h-6 w-6 sm:h-7 sm:w-7 text-white" />
+                <div className="container mx-auto px-4 py-2">
+                    <div className="flex items-center justify-between gap-3">
+                        {/* Hauptinhalt - optimiert und kompakt */}
+                        <div className="flex items-center gap-3 flex-1">
+                            <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg border border-white/20 bg-white/10 backdrop-blur-sm">
+                                <Calendar className="h-5 w-5 text-white" />
                             </div>
-                            <div className="text-center sm:text-left">
-                                <h3 className="font-bold text-white text-lg sm:text-xl tracking-tight leading-tight">
+                            <div>
+                                <h3 className="font-bold text-white text-base tracking-tight leading-tight">
                                     Exklusives Gespräch vereinbaren
                                 </h3>
-                                <p className="text-blue-50 text-sm sm:text-base font-medium">
-                                    Sichern Sie sich einen persönlichen Termin in nur 1 Minute
-                                </p>
-                                <p className="text-blue-100 text-xs sm:text-sm mt-1 hidden sm:block">
-                                    Unverbindliches Kennenlernen • 100% erfolgsbasiert
+                                <p className="text-blue-100 text-xs font-medium">
+                                    Persönlicher Termin in nur 1 Minute • 100% erfolgsbasiert
                                 </p>
                             </div>
                         </div>
 
-                        {/* Right side - Action Buttons */}
-                        <div className="flex flex-col items-center sm:items-end gap-3 w-full sm:w-auto">
-                            <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
-                                <div className="hidden sm:flex items-center gap-2 text-white px-4 py-2 rounded-xl text-sm font-medium bg-white/10 backdrop-blur-sm border border-white/20">
-                                    <Clock className="h-4 w-4" />
-                                    <span>Sofort verfügbar</span>
-                                </div>
-                                <Button className="text-blue-900 font-bold px-6 sm:px-8 py-3 sm:py-3.5 shadow-xl border-2 border-white transition-all duration-300 w-full sm:w-auto hover:scale-105 rounded-xl text-sm sm:text-base" 
-                                    style={{ backgroundColor: '#D4AF37', borderColor: '#ffffff' }}
-                                >
-                                    <Calendar className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-                                    Termin vorschlagen
-                                </Button>
+                        {/* Rechts - Kompakte Action Buttons */}
+                        <div className="flex items-center gap-2">
+                            <div className="hidden sm:flex items-center gap-1.5 text-white px-3 py-1.5 rounded-lg text-xs font-medium bg-white/10 backdrop-blur-sm border border-white/20">
+                                <Clock className="h-3 w-3" />
+                                <span>Sofort verfügbar</span>
                             </div>
-                            <p className="text-blue-50 text-xs italic hidden sm:block opacity-90 text-center">
-                                💡 Wir rechnen ausschließlich im Erfolgsfall nach Vertragsunterzeichnung ab
-                            </p>
+                            <Button className="text-blue-900 font-bold px-4 py-2 shadow-lg border border-white transition-all duration-300 hover:scale-105 rounded-lg text-sm" 
+                                style={{ backgroundColor: '#D4AF37', borderColor: '#ffffff' }}
+                            >
+                                <Calendar className="mr-1.5 h-4 w-4" />
+                                Termin vorschlagen
+                            </Button>
                         </div>
                     </div>
                 </div>
             </div>
+
+            {/* Spacer für sticky bottom bar - reduziert */}
+            <div className="h-16 no-print-element"></div>
 
             {/* Help Modal - Self-Service Center */}
             <div id="help-modal" className="hidden fixed inset-0 z-50 items-center justify-center bg-black/50 backdrop-blur-sm no-print-element">

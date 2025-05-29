@@ -2,7 +2,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { FileText, Calendar, MapPin, Briefcase, ChevronLeft, ChevronRight, Clock, Star, Eye, Sparkles } from 'lucide-react';
+import { FileText, Calendar, MapPin, Briefcase, ChevronLeft, ChevronRight, Clock, Star, Eye, Sparkles, Shield } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
@@ -151,27 +151,27 @@ export const ResumeList = () => {
   const getSeniorityColor = (seniority?: string) => {
     switch (seniority?.toLowerCase()) {
       case 'senior':
-        return 'bg-gradient-to-r from-achieve-ka/10 to-achieve-mid/10 text-achieve-ka border-achieve-ka/30 shadow-achieve-ka/10';
+        return 'bg-gradient-to-r from-gray-900/10 to-gray-800/10 text-gray-900 border-gray-900/30 shadow-lg';
       case 'mid':
       case 'mid-level':
-        return 'bg-gradient-to-r from-blue/10 to-royal-blue/10 text-blue border-blue/30 shadow-blue/10';
+        return 'bg-gradient-to-r from-gray-700/10 to-gray-600/10 text-gray-700 border-gray-700/30 shadow-lg';
       case 'junior':
-        return 'bg-gradient-to-r from-mint-100 to-mint-200 text-mint-300 border-mint-300/50 shadow-mint-300/10';
+        return 'bg-gradient-to-r from-gray-500/10 to-gray-400/10 text-gray-500 border-gray-500/30 shadow-lg';
       default:
-        return 'bg-gradient-to-r from-gray-50 to-gray-100 text-gray-950 border-gray-200 shadow-gray-200/10';
+        return 'bg-gradient-to-r from-gray-50 to-gray-100 text-gray-900 border-gray-200 shadow-sm';
     }
   };
 
   const getSkillBadgeColor = (skill: string) => {
     const hash = skill.toLowerCase().charCodeAt(0);
     if (hash % 4 === 0) {
-      return 'bg-achieve-ka/10 text-achieve-ka border-achieve-ka/20 hover:bg-achieve-ka/20 transition-all duration-200';
+      return 'bg-gray-900/10 text-gray-900 border-gray-900/20 hover:bg-gray-900/20 transition-all duration-200';
     } else if (hash % 4 === 1) {
-      return 'bg-blue/10 text-blue border-blue/20 hover:bg-blue/20 transition-all duration-200';
+      return 'bg-gray-700/10 text-gray-700 border-gray-700/20 hover:bg-gray-700/20 transition-all duration-200';
     } else if (hash % 4 === 2) {
-      return 'bg-yellow/10 text-yellow border-yellow/20 hover:bg-yellow/20 transition-all duration-200';
+      return 'bg-gray-600/10 text-gray-600 border-gray-600/20 hover:bg-gray-600/20 transition-all duration-200';
     }
-    return 'bg-gray-50 text-gray-950 border-gray-200 hover:bg-gray-100 transition-all duration-200';
+    return 'bg-gray-50 text-gray-900 border-gray-200 hover:bg-gray-100 transition-all duration-200';
   };
 
   // Premium Skeleton mit Animation
@@ -216,15 +216,15 @@ export const ResumeList = () => {
 
   if (error) {
     return (
-      <div className="text-center min-h-[500px] flex flex-col items-center justify-center bg-gradient-to-br from-red/5 to-orange/5 rounded-3xl border border-red/10 p-12">
+      <div className="text-center min-h-[500px] flex flex-col items-center justify-center bg-gradient-to-br from-red/5 to-red/5 rounded-3xl border border-red/10 p-12">
         <div className="w-20 h-20 bg-red/10 rounded-2xl flex items-center justify-center mb-6">
-          <FileText className="h-10 w-10 text-red" />
+          <FileText className="h-10 w-10 text-red-600" />
         </div>
-        <h3 className="text-2xl font-bold text-gray-950 mb-3">Fehler beim Laden</h3>
-        <p className="text-gray-950 mb-6 max-w-md">{error}</p>
+        <h3 className="text-2xl font-bold text-gray-900 mb-3">Fehler beim Laden</h3>
+        <p className="text-gray-700 mb-6 max-w-md">{error}</p>
         <Button 
           onClick={fetchResumes} 
-          className="bg-red hover:bg-red/90 text-white px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+          className="bg-red-600 hover:bg-red-700 text-white px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
         >
           <Star className="h-4 w-4 mr-2" />
           Erneut versuchen
@@ -235,15 +235,15 @@ export const ResumeList = () => {
 
   if (resumes.length === 0) {
     return (
-      <div className="text-center min-h-[500px] flex flex-col items-center justify-center bg-gradient-to-br from-gray-50 to-blue/5 rounded-3xl border border-gray-200 p-12">
-        <div className="w-24 h-24 bg-blue/10 rounded-3xl flex items-center justify-center mb-8 relative">
-          <FileText className="h-12 w-12 text-blue" />
-          <div className="absolute -top-2 -right-2 w-8 h-8 bg-yellow rounded-full flex items-center justify-center">
-            <Sparkles className="h-4 w-4 text-white" />
+      <div className="text-center min-h-[500px] flex flex-col items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 rounded-3xl border border-gray-200 p-12">
+        <div className="w-24 h-24 bg-gray-900 rounded-3xl flex items-center justify-center mb-8 relative">
+          <FileText className="h-12 w-12 text-white" />
+          <div className="absolute -top-2 -right-2 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center">
+            <Sparkles className="h-4 w-4 text-gray-900" />
           </div>
         </div>
-        <h3 className="text-3xl font-bold text-gray-950 mb-4">Noch keine Kandidaten</h3>
-        <p className="text-lg text-gray-950 mb-8 max-w-md">
+        <h3 className="text-3xl font-bold text-gray-900 mb-4">Noch keine Kandidaten</h3>
+        <p className="text-lg text-gray-700 mb-8 max-w-md">
           {searchParams.toString() 
             ? 'Versuchen Sie es mit anderen Filterkriterien.'
             : 'Laden Sie den ersten Lebenslauf hoch, um zu beginnen.'}
@@ -251,14 +251,14 @@ export const ResumeList = () => {
         {searchParams.toString() ? (
           <Button 
             onClick={() => router.push('/resumes')} 
-            className="bg-blue hover:bg-blue/90 text-white px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+            className="bg-gray-900 hover:bg-gray-800 text-white px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
           >
             Filter zurücksetzen
           </Button>
         ) : (
           <Button 
             onClick={() => router.push('/')} 
-            className="bg-achieve-ka hover:bg-achieve-ka/90 text-white px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+            className="bg-gray-900 hover:bg-gray-800 text-white px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
           >
             <FileText className="h-5 w-5 mr-2" />
             Ersten CV hochladen
@@ -270,27 +270,31 @@ export const ResumeList = () => {
 
   return (
     <div className="space-y-8">
-      {/* Stats Header */}
-      <div className="bg-gradient-to-r from-achieve-ka/5 to-blue/5 rounded-2xl p-6 border border-achieve-ka/10">
+      {/* Stats Header - Premium Design */}
+      <div className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-2xl p-6 text-white shadow-2xl">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-gray-950 mb-1">
+            <h2 className="text-2xl font-bold mb-1">
               {pagination?.total || resumes.length} Kandidaten gefunden
             </h2>
-            <p className="text-gray-950 flex items-center gap-2">
+            <p className="text-gray-200 flex items-center gap-2">
               <Clock className="h-4 w-4" />
-              Sortiert nach Erstellungsdatum (neueste zuerst)
+              Vollständig pseudonymisiert und DSGVO-konform
             </p>
           </div>
           <div className="flex items-center gap-3">
             {resumes.filter(r => r.isNew).length > 0 && (
-              <div className="flex items-center gap-2 bg-yellow/10 text-yellow px-4 py-2 rounded-xl border border-yellow/20">
+              <div className="flex items-center gap-2 bg-yellow-400/20 text-yellow-400 px-4 py-2 rounded-xl border border-yellow-400/30">
                 <Sparkles className="h-4 w-4" />
                 <span className="font-medium">
                   {resumes.filter(r => r.isNew).length} neue
                 </span>
               </div>
             )}
+            <div className="flex items-center gap-2 bg-white/10 px-4 py-2 rounded-xl">
+              <Shield className="h-4 w-4 text-green-400" />
+              <span className="font-medium text-sm">Anonymisiert</span>
+            </div>
           </div>
         </div>
       </div>
@@ -301,19 +305,19 @@ export const ResumeList = () => {
           <div
             key={resume.id}
             onClick={() => handleResumeClick(resume.id)}
-            className="group relative bg-white p-8 rounded-3xl shadow-sm border border-gray-200 hover:shadow-2xl hover:border-blue/30 transition-all duration-500 cursor-pointer overflow-hidden"
+            className="group relative bg-white p-8 rounded-3xl shadow-sm border border-gray-200 hover:shadow-2xl hover:border-gray-900/30 transition-all duration-500 cursor-pointer overflow-hidden"
             style={{
               animationDelay: `${index * 100}ms`,
               animation: 'slideInUp 0.6s ease-out forwards'
             }}
           >
             {/* Gradient Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-r from-achieve-ka/0 via-transparent to-blue/0 group-hover:from-achieve-ka/5 group-hover:to-blue/5 transition-all duration-500 rounded-3xl" />
+            <div className="absolute inset-0 bg-gradient-to-r from-gray-900/0 via-transparent to-gray-800/0 group-hover:from-gray-900/5 group-hover:to-gray-800/5 transition-all duration-500 rounded-3xl" />
             
-            {/* NEW Badge */}
+            {/* NEW Badge - Premium Style */}
             {resume.isNew && (
               <div className="absolute -top-2 -right-2 z-10">
-                <div className="bg-gradient-to-r from-yellow to-orange text-white px-4 py-2 rounded-2xl shadow-lg animate-pulse">
+                <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 px-4 py-2 rounded-2xl shadow-lg animate-pulse">
                   <div className="flex items-center gap-2">
                     <Sparkles className="h-4 w-4" />
                     <span className="font-bold text-sm">NEU</span>
@@ -324,24 +328,24 @@ export const ResumeList = () => {
 
             <div className="relative z-10 flex items-start justify-between">
               <div className="flex items-start gap-6 flex-1">
-                {/* Enhanced Icon */}
+                {/* Enhanced Icon - Premium Design */}
                 <div className="relative">
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue/10 to-achieve-ka/10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
-                    <FileText className="h-8 w-8 text-blue group-hover:text-achieve-ka transition-colors duration-300" />
+                  <div className="w-16 h-16 bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                    <FileText className="h-8 w-8 text-white" />
                   </div>
                   {resume.isNew && (
-                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-yellow rounded-full animate-ping" />
+                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-yellow-400 rounded-full animate-ping" />
                   )}
                 </div>
                 
                 <div className="flex-1 space-y-4">
                   {/* Header */}
                   <div className="flex items-center gap-4">
-                    <h3 className="text-2xl font-bold text-gray-950 group-hover:text-blue transition-colors duration-300">
+                    <h3 className="text-2xl font-bold text-gray-900 group-hover:text-gray-700 transition-colors duration-300">
                       {resume.name || resume.fileName}
                     </h3>
                     {resume.senioritaet && (
-                      <Badge className={`${getSeniorityColor(resume.senioritaet)} shadow-lg font-semibold px-4 py-1.5`}>
+                      <Badge className={`${getSeniorityColor(resume.senioritaet)} font-semibold px-4 py-1.5`}>
                         {resume.senioritaet}
                       </Badge>
                     )}
@@ -355,21 +359,21 @@ export const ResumeList = () => {
                   
                   {/* Title */}
                   {resume.title && (
-                    <p className="text-lg font-medium text-gray-950 bg-gray-50 px-4 py-2 rounded-xl inline-block">
+                    <p className="text-lg font-medium text-gray-700 bg-gray-50 px-4 py-2 rounded-xl inline-block">
                       {resume.title}
                     </p>
                   )}
                   
-                  {/* Meta Information */}
-                  <div className="flex flex-wrap items-center gap-6 text-gray-950">
-                    <div className="flex items-center gap-2 bg-blue/5 px-3 py-2 rounded-xl">
-                      <Calendar className="h-5 w-5 text-blue" />
+                  {/* Meta Information - Premium Style */}
+                  <div className="flex flex-wrap items-center gap-6 text-gray-700">
+                    <div className="flex items-center gap-2 bg-gray-900/5 px-3 py-2 rounded-xl">
+                      <Calendar className="h-5 w-5 text-gray-900" />
                       <span className="font-medium">{formatDate(resume.uploadedAt)}</span>
                     </div>
                     
                     {(resume.contact?.location_city || resume.contact?.location_country) && (
-                      <div className="flex items-center gap-2 bg-achieve-ka/5 px-3 py-2 rounded-xl">
-                        <MapPin className="h-5 w-5 text-achieve-ka" />
+                      <div className="flex items-center gap-2 bg-gray-700/5 px-3 py-2 rounded-xl">
+                        <MapPin className="h-5 w-5 text-gray-700" />
                         <span className="font-medium">
                           {[resume.contact.location_city, resume.contact.location_country]
                             .filter(Boolean)
@@ -379,14 +383,14 @@ export const ResumeList = () => {
                     )}
                     
                     {resume.derived?.years_of_experience !== undefined && (
-                      <div className="flex items-center gap-2 bg-yellow/5 px-3 py-2 rounded-xl">
-                        <Briefcase className="h-5 w-5 text-yellow" />
+                      <div className="flex items-center gap-2 bg-gray-600/5 px-3 py-2 rounded-xl">
+                        <Briefcase className="h-5 w-5 text-gray-600" />
                         <span className="font-medium">{resume.derived.years_of_experience} Jahre Erfahrung</span>
                       </div>
                     )}
                   </div>
                   
-                  {/* Skills */}
+                  {/* Skills - Premium Design */}
                   {resume.skills && resume.skills.length > 0 && (
                     <div className="flex flex-wrap gap-3">
                       {resume.skills.slice(0, 6).map((skill, skillIndex) => (
@@ -401,7 +405,7 @@ export const ResumeList = () => {
                       {resume.skills.length > 6 && (
                         <Badge 
                           variant="outline"
-                          className="bg-gray-50 text-gray-950 border-gray-200 font-medium px-3 py-1.5 shadow-sm"
+                          className="bg-gray-50 text-gray-900 border-gray-200 font-medium px-3 py-1.5 shadow-sm"
                         >
                           +{resume.skills.length - 6} weitere Skills
                         </Badge>
@@ -411,28 +415,28 @@ export const ResumeList = () => {
                 </div>
               </div>
               
-              {/* Enhanced Action Button */}
+              {/* Enhanced Action Button - Premium Design */}
               <Button
                 variant="ghost"
                 size="lg"
-                className="opacity-0 group-hover:opacity-100 transition-all duration-300 bg-blue/10 hover:bg-blue text-blue hover:text-white px-6 py-3 rounded-2xl shadow-lg hover:shadow-xl font-semibold"
+                className="opacity-0 group-hover:opacity-100 transition-all duration-300 bg-gray-900/10 hover:bg-gray-900 text-gray-900 hover:text-white px-6 py-3 rounded-2xl shadow-lg hover:shadow-xl font-semibold"
               >
                 <Eye className="h-5 w-5 mr-2" />
-                Ansehen
+                Profil ansehen
               </Button>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Enhanced Pagination */}
+      {/* Enhanced Pagination - Premium Design */}
       {pagination && pagination.totalPages > 1 && (
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
+        <div className="bg-white rounded-2xl p-6 shadow-xl border border-gray-200">
           <div className="flex items-center justify-between">
-            <p className="text-lg font-medium text-gray-950">
+            <p className="text-lg font-medium text-gray-900">
               Zeige {((pagination.page - 1) * pagination.limit) + 1} bis{' '}
               {Math.min(pagination.page * pagination.limit, pagination.total)} von{' '}
-              <span className="font-bold text-blue">{pagination.total}</span> Kandidaten
+              <span className="font-bold text-gray-900">{pagination.total}</span> Kandidaten
             </p>
             
             <div className="flex items-center gap-3">
@@ -441,7 +445,7 @@ export const ResumeList = () => {
                 size="lg"
                 onClick={() => handlePageChange(pagination.page - 1)}
                 disabled={pagination.page === 1}
-                className="px-6 py-3 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300"
+                className="px-6 py-3 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border-gray-300 hover:border-gray-900"
               >
                 <ChevronLeft className="h-5 w-5 mr-2" />
                 Zurück
@@ -468,8 +472,8 @@ export const ResumeList = () => {
                       onClick={() => handlePageChange(pageNum)}
                       className={`w-12 h-12 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 ${
                         pageNum === pagination.page 
-                          ? 'bg-blue text-white shadow-blue/20' 
-                          : 'hover:bg-blue/10'
+                          ? 'bg-gray-900 text-white shadow-lg' 
+                          : 'border-gray-300 hover:bg-gray-900/10 hover:border-gray-900'
                       }`}
                     >
                       {pageNum}
@@ -483,7 +487,7 @@ export const ResumeList = () => {
                 size="lg"
                 onClick={() => handlePageChange(pagination.page + 1)}
                 disabled={pagination.page === pagination.totalPages}
-                className="px-6 py-3 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300"
+                className="px-6 py-3 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 border-gray-300 hover:border-gray-900"
               >
                 Weiter
                 <ChevronRight className="h-5 w-5 ml-2" />
