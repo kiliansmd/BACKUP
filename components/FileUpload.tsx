@@ -323,14 +323,13 @@ export const FileUpload = ({ onUploadSuccess }: FileUploadProps) => {
                 )}
               </div>
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
+            <button
               onClick={clearMessage}
-              className="text-gray-500 hover:text-gray-700"
+              className="p-2 text-gray-500 hover:text-gray-700 rounded-lg hover:bg-gray-100 transition-colors duration-200"
+              aria-label="Nachricht schließen"
             >
               <X className="h-5 w-5" />
-            </Button>
+            </button>
           </div>
         </div>
       )}
@@ -347,7 +346,6 @@ export const FileUpload = ({ onUploadSuccess }: FileUploadProps) => {
               <div
                 key={index}
                 className="bg-white p-4 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer"
-                onClick={() => router.push(`/candidate/${file.id}`)}
               >
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 bg-gray-900 rounded-xl flex items-center justify-center">
@@ -357,9 +355,12 @@ export const FileUpload = ({ onUploadSuccess }: FileUploadProps) => {
                     <h4 className="font-semibold text-gray-900">{file.name || file.fileName}</h4>
                     <p className="text-sm text-gray-600">Pseudonymisiert • DSGVO-konform</p>
                   </div>
-                  <Button variant="outline" size="sm" className="rounded-xl border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white">
+                  <button 
+                    onClick={() => router.push(`/candidate/${file.id}`)}
+                    className="px-3 py-1 rounded-xl border border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white text-sm font-medium transition-colors duration-200"
+                  >
                     Profil ansehen →
-                  </Button>
+                  </button>
                 </div>
               </div>
             ))}

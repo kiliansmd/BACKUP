@@ -17,6 +17,17 @@ export default function Home() {
     console.log('Upload successful:', data);
   };
 
+  const scrollToUpload = () => {
+    const uploadSection = document.getElementById('upload-section');
+    if (uploadSection) {
+      uploadSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const navigateToResumes = () => {
+    router.push('/resumes');
+  };
+
   return (
     <>
       {/* 95% weißer Hintergrund für den gesamten Viewport */}
@@ -48,26 +59,26 @@ export default function Home() {
                 </div>
                 
                 <div className="flex items-center gap-3">
-                  <Button 
-                    onClick={() => router.push('/resumes')}
-                    className="hidden sm:flex bg-white/10 border border-white/20 text-white hover:bg-white hover:text-gray-900 backdrop-blur-sm"
+                  <button 
+                    onClick={navigateToResumes}
+                    className="hidden sm:flex items-center gap-2 px-4 py-2 bg-white/10 border border-white/20 text-white hover:bg-white hover:text-gray-900 backdrop-blur-sm rounded-md font-medium transition-all duration-200 cursor-pointer"
                   >
-                    <Users className="h-4 w-4 mr-2" />
+                    <Users className="h-4 w-4" />
                     Kandidaten
-                  </Button>
-                  <Button 
-                    onClick={() => document.getElementById('upload-section')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="bg-white hover:bg-gray-100 text-gray-900 font-semibold shadow-lg"
+                  </button>
+                  <button 
+                    onClick={scrollToUpload}
+                    className="flex items-center gap-2 px-4 py-2 bg-white hover:bg-gray-100 text-gray-900 font-semibold shadow-lg rounded-md transition-all duration-200 cursor-pointer"
                   >
-                    <Upload className="h-4 w-4 mr-2" />
+                    <Upload className="h-4 w-4" />
                     Upload
-                  </Button>
+                  </button>
                 </div>
               </div>
             </div>
 
             {/* Hero Section als große dunkle Kachel */}
-            <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-3xl p-16 shadow-2xl border border-gray-700/20">
+            <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-3xl p-16 shadow-2xl border border-gray-700/20 relative">
               {/* Background Animation */}
               <div className="absolute inset-0 opacity-20">
                 <div className="absolute top-20 right-20 w-40 h-40 bg-gradient-to-br from-white/20 to-transparent rounded-full blur-3xl animate-pulse" />
@@ -138,14 +149,14 @@ export default function Home() {
 
                 {/* CTA Button */}
                 <div className="pt-8">
-                  <Button 
-                    onClick={() => document.getElementById('upload-section')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="bg-white hover:bg-gray-100 text-gray-900 px-12 py-6 rounded-2xl text-xl font-bold shadow-2xl hover:shadow-3xl transition-all duration-500 group"
+                  <button 
+                    onClick={scrollToUpload}
+                    className="inline-flex items-center gap-3 bg-white hover:bg-gray-100 text-gray-900 px-12 py-6 rounded-2xl text-xl font-bold shadow-2xl hover:shadow-3xl transition-all duration-500 group cursor-pointer"
                   >
-                    <Upload className="h-6 w-6 mr-3 group-hover:animate-bounce" />
+                    <Upload className="h-6 w-6 group-hover:animate-bounce" />
                     Jetzt CV hochladen
-                    <ArrowRight className="h-6 w-6 ml-3 group-hover:translate-x-1 transition-transform" />
-                  </Button>
+                    <ArrowRight className="h-6 w-6 group-hover:translate-x-1 transition-transform" />
+                  </button>
                 </div>
               </div>
             </div>
@@ -275,21 +286,20 @@ export default function Home() {
                   Vollständig anonymisiert und DSGVO-konform.
                 </p>
                 <div className="flex flex-wrap items-center justify-center gap-6 mt-8">
-                  <Button 
-                    onClick={() => router.push('/resumes')}
-                    variant="outline"
-                    className="px-8 py-4 rounded-2xl text-lg font-semibold border-2 border-white text-white hover:bg-white hover:text-gray-900 transition-all duration-300"
+                  <button 
+                    onClick={navigateToResumes}
+                    className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-lg font-semibold border-2 border-white text-white hover:bg-white hover:text-gray-900 transition-all duration-300 cursor-pointer"
                   >
-                    <Users className="h-5 w-5 mr-2" />
+                    <Users className="h-5 w-5" />
                     Alle Kandidaten ansehen
-                  </Button>
-                  <Button 
-                    onClick={() => document.getElementById('upload-section')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="bg-white hover:bg-gray-100 text-gray-900 px-8 py-4 rounded-2xl text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300"
+                  </button>
+                  <button 
+                    onClick={scrollToUpload}
+                    className="inline-flex items-center gap-2 bg-white hover:bg-gray-100 text-gray-900 px-8 py-4 rounded-2xl text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer"
                   >
-                    <Upload className="h-5 w-5 mr-2" />
+                    <Upload className="h-5 w-5" />
                     CV hochladen
-                  </Button>
+                  </button>
                 </div>
                 
                 {/* Status Indicators */}
