@@ -252,11 +252,10 @@ export function KandidatenProfile({
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 bg-gray-900 rounded-xl flex items-center justify-center shadow-lg p-2">
                                 <Image 
-                                    src="/logo-white.svg" 
-                                    alt="Acme Inc Logo" 
+                                    src="/logo-white.png" 
+                                    alt="Company Logo" 
                                     width={32} 
                                     height={32} 
-                                    className="invert"
                                 />
                             </div>
                             <div className="flex flex-col">
@@ -1098,11 +1097,10 @@ export function KandidatenProfile({
                                 <div className="flex items-center gap-3 mb-6">
                                     <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-lg p-2">
                                         <Image 
-                                            src="/logo-white.svg" 
+                                            src="/logo-white.png" 
                                             alt="Acme Inc Logo" 
                                             width={32} 
                                             height={32} 
-                                            className="invert"
                                         />
                                     </div>
                                     <div>

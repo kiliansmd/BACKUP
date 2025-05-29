@@ -374,11 +374,10 @@ export const FileUpload = ({ onUploadSuccess }: FileUploadProps) => {
           <div className="flex items-center justify-center gap-4 mb-6">
             <div className="w-16 h-16 bg-white rounded-3xl flex items-center justify-center shadow-2xl p-2">
               <Image 
-                src="/logo-white.svg" 
-                alt="Acme Inc Logo" 
+                src="/logo-white.png" 
+                alt="Company Logo" 
                 width={48} 
                 height={48} 
-                className="invert"
               />
             </div>
             <h3 className="text-2xl font-bold text-white">Acme Inc. Premium CV-Analyse</h3>

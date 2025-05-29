@@ -88,11 +88,10 @@ export default function ResumesPage() {
                   <div className="flex items-center gap-3">
                     <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-lg p-2">
                       <Image 
-                        src="/logo-white.svg" 
-                        alt="Acme Inc Logo" 
+                        src="/logo-white.png" 
+                        alt="Company Logo" 
                         width={40} 
                         height={40} 
-                        className="invert"
                       />
                     </div>
                     <div className="flex flex-col">
@@ -127,11 +126,10 @@ export default function ResumesPage() {
                 <div className="flex items-center justify-center gap-4 mb-6">
                   <div className="w-20 h-20 bg-white rounded-3xl flex items-center justify-center shadow-2xl p-3">
                     <Image 
-                      src="/logo-white.svg" 
-                      alt="Acme Inc Logo" 
-                      width={60} 
-                      height={60} 
-                      className="invert"
+                      src="/logo-white.png" 
+                      alt="Company Logo" 
+                      width={48} 
+                      height={48} 
                     />
                   </div>
                   <div className="w-4 h-4 bg-yellow-400 rounded-full animate-ping" />
