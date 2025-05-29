@@ -368,11 +368,11 @@ export const FileUpload = ({ onUploadSuccess }: FileUploadProps) => {
         </div>
       )}
 
-      {/* Info Section - Exklusives Design */}
-      <div className="max-w-4xl mx-auto bg-gradient-to-r from-gray-900 to-gray-800 rounded-3xl p-8 shadow-2xl">
-        <div className="text-center space-y-6">
+      {/* Info Section - Updated Styling */}
+      <div className="max-w-4xl mx-auto bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 rounded-3xl p-12 text-center shadow-2xl border border-gray-700/20">
+        <div className="space-y-8">
           <div className="flex items-center justify-center gap-4 mb-6">
-            <div className="w-16 h-16 bg-white rounded-3xl flex items-center justify-center shadow-2xl p-2">
+            <div className="w-16 h-16 bg-white/10 backdrop-blur-sm rounded-3xl flex items-center justify-center shadow-2xl p-2">
               <Image 
                 src="/logo-white.png" 
                 alt="Company Logo" 
@@ -382,33 +382,36 @@ export const FileUpload = ({ onUploadSuccess }: FileUploadProps) => {
             </div>
             <h3 className="text-2xl font-bold text-white">Acme Inc. Premium CV-Analyse</h3>
           </div>
-          <p className="text-gray-200 mb-8">Professioneller 3-Stufen-Prozess für exklusive Kandidatenprofile</p>
+          
+          <p className="text-gray-300 text-lg">Professioneller 3-Stufen-Prozess für exklusive Kandidatenprofile</p>
+          
           <div className="grid md:grid-cols-3 gap-8">
             <div className="space-y-3">
-              <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto">
-                <Upload className="h-8 w-8 text-gray-900" />
+              <div className="w-16 h-16 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto">
+                <Upload className="h-8 w-8 text-white" />
               </div>
               <h4 className="font-semibold text-white">1. Sicherer Upload</h4>
-              <p className="text-sm text-gray-200">Sichere Übertragung mit modernster Verschlüsselung</p>
+              <p className="text-sm text-gray-300">Sichere Übertragung mit modernster Verschlüsselung</p>
             </div>
+            
             <div className="space-y-3">
-              <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto">
-                <Brain className="h-8 w-8 text-gray-900" />
+              <div className="w-16 h-16 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto">
+                <Brain className="h-8 w-8 text-white" />
               </div>
               <h4 className="font-semibold text-white">2. KI-Analyse & Pseudonymisierung</h4>
-              <p className="text-sm text-gray-200">Intelligente Extraktion mit sofortiger DSGVO-konformer Anonymisierung</p>
+              <p className="text-sm text-gray-300">Intelligente Extraktion mit sofortiger DSGVO-konformer Anonymisierung</p>
             </div>
+            
             <div className="space-y-3">
-              <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mx-auto">
-                <Shield className="h-8 w-8 text-gray-900" />
+              <div className="w-16 h-16 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto">
+                <Shield className="h-8 w-8 text-white" />
               </div>
               <h4 className="font-semibold text-white">3. Premium Profil</h4>
-              <p className="text-sm text-gray-200">Hochwertiges, DSGVO-konformes Kandidatenprofil verfügbar</p>
+              <p className="text-sm text-gray-300">Hochwertiges, DSGVO-konformes Kandidatenprofil verfügbar</p>
             </div>
           </div>
           
-          {/* Status Indicators */}
-          <div className="flex items-center justify-center gap-8 text-gray-200 mt-8">
+          <div className="flex items-center justify-center gap-8 text-gray-300 mt-8">
             <span className="flex items-center gap-2">
               <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse" />
               <span className="font-medium">System Online</span>
@@ -426,4 +429,4 @@ export const FileUpload = ({ onUploadSuccess }: FileUploadProps) => {
       </div>
     </div>
   );
-}; 
+};
