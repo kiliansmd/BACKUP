@@ -37,7 +37,6 @@ export default function Home() {
                 height={32} 
                 className="object-contain"
               />
-              <div className="text-white font-bold text-lg">getexperts</div>
             </div>
 
             {/* Status */}
@@ -205,7 +204,6 @@ export default function Home() {
                 width={24} 
                 height={24} 
               />
-              <span className="font-medium">getexperts</span>
             </div>
             <div className="text-sm text-gray-400">
               KI-gestützte Bewerberverwaltung mit DSGVO-Compliance
@@ -215,4 +213,4 @@ export default function Home() {
       </footer>
     </div>
   );
-} 
+}
