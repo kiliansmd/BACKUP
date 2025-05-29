@@ -47,7 +47,7 @@ export default function Home() {
         <div className="container mx-auto px-4 py-16">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-gray-900">
+              <h1 className="text-3xl font-bold text-gray-950">
                 Upload Resume
               </h1>
             </div>
@@ -55,7 +55,7 @@ export default function Home() {
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
               <div className="p-6">
                 <div className="text-center mb-8">
-                  <p className="text-lg text-gray-600">
+                  <p className="text-lg text-gray-950">
                     Upload your CV and let us analyze it for you
                   </p>
                 </div>
@@ -63,12 +63,12 @@ export default function Home() {
                 <div className="flex flex-col items-center">
                   <FileUpload onFileUpload={handleFileUpload} />
                   {isLoading && (
-                    <div className="mt-4 text-blue-600">
+                    <div className="mt-4 text-blue">
                       Processing your CV...
                     </div>
                   )}
                   {error && (
-                    <div className="mt-4 text-red-600">
+                    <div className="mt-4 text-red">
                       {error}
                     </div>
                   )}

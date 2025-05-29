@@ -9,6 +9,7 @@ import {
   SheetTrigger,
 } from '@/components/ui/sheet';
 import type { NavigationItem } from '@/types/kandidat';
+import Link from 'next/link';
 
 interface MobileMenuProps {
   navSections: NavigationItem[];
@@ -32,19 +33,19 @@ export function MobileMenu({ navSections, kandidatName }: MobileMenuProps) {
         </SheetHeader>
         <nav className="flex flex-col gap-4 mt-8">
           {navSections.map((section) => (
-            <a
+            <Link
               key={section.id}
               href={`#${section.id}`}
+              className="text-lg font-medium py-2 px-4 rounded-lg hover:bg-gray-50 transition-colors"
               onClick={() => setIsOpen(false)}
-              className="text-lg font-medium py-2 px-4 rounded-lg hover:bg-gray-100 transition-colors"
             >
               {section.label}
-            </a>
+            </Link>
           ))}
         </nav>
         {kandidatName && (
           <div className="mt-8 pt-8 border-t border-gray-200">
-            <p className="text-sm text-gray-500">Aktuelles Profil</p>
+            <p className="text-sm text-gray-950">Aktuelles Profil</p>
             <p className="font-medium text-lg">{kandidatName}</p>
           </div>
         )}

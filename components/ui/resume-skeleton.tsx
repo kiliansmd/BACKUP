@@ -10,21 +10,21 @@ export function ResumeSkeleton() {
             <div className="flex flex-col lg:flex-row gap-8">
               <div className="w-full lg:w-2/3">
                 <div className="flex gap-2 mb-4">
-                  <Skeleton className="h-6 w-32 bg-gray-700" />
-                  <Skeleton className="h-6 w-40 bg-gray-700" />
+                  <Skeleton className="h-6 w-32 bg-gray-950" />
+                  <Skeleton className="h-6 w-40 bg-gray-950" />
                 </div>
-                <Skeleton className="h-12 w-64 bg-gray-700 mb-2" />
-                <Skeleton className="h-8 w-48 bg-gray-700 mb-6" />
+                <Skeleton className="h-12 w-64 bg-gray-950 mb-2" />
+                <Skeleton className="h-8 w-48 bg-gray-950 mb-6" />
                 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
                   {[1, 2, 3, 4].map((i) => (
-                    <Skeleton key={i} className="h-6 w-48 bg-gray-700" />
+                    <Skeleton key={i} className="h-6 w-48 bg-gray-950" />
                   ))}
                 </div>
                 
                 <div className="flex gap-2">
                   {[1, 2, 3, 4].map((i) => (
-                    <Skeleton key={i} className="h-6 w-20 bg-gray-700" />
+                    <Skeleton key={i} className="h-6 w-20 bg-gray-950" />
                   ))}
                 </div>
               </div>

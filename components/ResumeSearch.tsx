@@ -88,7 +88,7 @@ export function ResumeSearch() {
     <div className="space-y-4">
       <div className="flex gap-4">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-950 h-4 w-4" />
           <Input
             placeholder="Nach Namen, Position oder Skills suchen..."
             value={query}
@@ -153,7 +153,7 @@ export function ResumeSearch() {
               <div>
                 <Label>Erfahrung (Jahre)</Label>
                 <div className="flex items-center gap-4 mt-2">
-                  <span className="text-sm text-gray-500">{experienceRange[0]}</span>
+                  <span className="text-sm text-gray-950">{experienceRange[0]}</span>
                   <Slider
                     value={experienceRange}
                     onValueChange={(value) => {
@@ -164,7 +164,7 @@ export function ResumeSearch() {
                     step={1}
                     className="flex-1"
                   />
-                  <span className="text-sm text-gray-500">{experienceRange[1]}+</span>
+                  <span className="text-sm text-gray-950">{experienceRange[1]}+</span>
                 </div>
               </div>
 

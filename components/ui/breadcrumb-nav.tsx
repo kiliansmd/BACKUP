@@ -22,7 +22,7 @@ export function BreadcrumbNav({ items }: BreadcrumbNavProps) {
           <li>
             <Link 
               href="/" 
-              className="text-gray-500 hover:text-gray-700 flex items-center"
+              className="text-gray-950 hover:text-gray-950 flex items-center"
             >
               <Home className="w-4 h-4 mr-1" />
               <span className="sr-only">Home</span>
@@ -31,16 +31,16 @@ export function BreadcrumbNav({ items }: BreadcrumbNavProps) {
           
           {items.map((item, index) => (
             <li key={index} className="flex items-center">
-              <ChevronRight className="w-4 h-4 text-gray-400 mx-2" />
+              <ChevronRight className="w-4 h-4 text-gray-950 mx-2" />
               {item.href ? (
                 <Link 
                   href={item.href}
-                  className="text-gray-500 hover:text-gray-700"
+                  className="text-gray-950 hover:text-gray-950"
                 >
                   {item.label}
                 </Link>
               ) : (
-                <span className="text-gray-900 font-medium">
+                <span className="text-gray-950 font-medium">
                   {item.label}
                 </span>
               )}

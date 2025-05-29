@@ -32,23 +32,24 @@ export const FileUpload = ({ onFileUpload }: FileUploadProps) => {
       {...getRootProps()}
       className={`
         w-full max-w-2xl p-8 rounded-lg border-2 border-dashed
-        transition-colors duration-200 ease-in-out cursor-pointer
-        ${isDragActive 
-          ? 'border-blue-500 bg-blue-50' 
-          : 'border-gray-300 hover:border-gray-400 bg-white'
+        transition-all duration-200 cursor-pointer
+        ${
+          isDragActive
+            ? 'border-blue bg-blue-50'
+            : 'border-gray-200 hover:border-gray-200 bg-white'
         }
       `}
     >
       <input {...getInputProps()} />
-      <div className="flex flex-col items-center justify-center gap-4">
-        <div className="p-4 rounded-full bg-gray-100">
-          <Upload className="w-8 h-8 text-gray-500" />
+      <div className="flex flex-col items-center justify-center text-center space-y-4">
+        <div className="p-4 rounded-full bg-gray-50">
+          <Upload className="w-8 h-8 text-gray-950" />
         </div>
         <div className="text-center">
-          <p className="text-lg font-medium text-gray-700">
-            Drop your CV here, or <span className="text-blue-500">browse</span>
+          <p className="text-lg font-medium text-gray-950">
+            Drop your CV here, or <span className="text-blue">browse</span>
           </p>
-          <p className="mt-2 text-sm text-gray-500">
+          <p className="mt-2 text-sm text-gray-950">
             Supports PDF, DOC, and DOCX files
           </p>
         </div>

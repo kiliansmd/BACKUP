@@ -324,13 +324,13 @@ export default function CandidateDetailsPage() {
         ]} />
         <div className="flex flex-col items-center justify-center min-h-[400px]">
           <div className="text-center">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-2">
+            <h2 className="text-2xl font-semibold text-gray-950 mb-2">
               Kandidat konnte nicht geladen werden
             </h2>
-            <p className="text-gray-600 mb-4">{error}</p>
+            <p className="text-gray-950 mb-4">{error}</p>
             <a 
               href="/resumes"
-              className="text-blue-600 hover:text-blue-800 underline"
+              className="text-blue hover:text-blue underline"
             >
               Zurück zur Übersicht
             </a>
@@ -348,7 +348,7 @@ export default function CandidateDetailsPage() {
           { label: 'Nicht gefunden' }
         ]} />
         <div className="flex items-center justify-center min-h-[400px]">
-          <p className="text-gray-600">Keine Daten gefunden</p>
+          <p className="text-gray-950">Keine Daten gefunden</p>
         </div>
       </main>
     );

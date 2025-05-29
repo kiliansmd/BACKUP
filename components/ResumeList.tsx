@@ -99,15 +99,27 @@ export const ResumeList = () => {
   const getSeniorityColor = (seniority?: string) => {
     switch (seniority?.toLowerCase()) {
       case 'senior':
-        return 'bg-purple-100 text-purple-800 border-purple-200';
+        return 'bg-purple-100 text-achieve-mid border-purple-200';
       case 'mid':
       case 'mid-level':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
+        return 'bg-blue-100 text-blue border-blue-200';
       case 'junior':
-        return 'bg-green-100 text-green-800 border-green-200';
+        return 'bg-mint-100 text-mint-300 border-mint-200';
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
+        return 'bg-gray-50 text-gray-950 border-gray-200';
     }
+  };
+
+  const getSkillBadgeColor = (skill: string) => {
+    const hash = skill.toLowerCase().charCodeAt(0);
+    if (hash % 4 === 0) {
+      return 'bg-achieve-ka/10 text-achieve-ka border-achieve-ka/20';
+    } else if (hash % 4 === 1) {
+      return 'bg-blue-50 text-blue border-blue/20';
+    } else if (hash % 4 === 2) {
+      return 'bg-yellow-50 text-yellow border-yellow/20';
+    }
+    return 'bg-gray-50 text-gray-950 border-gray-200';
   };
 
   if (loading && resumes.length === 0) {
@@ -133,7 +145,7 @@ export const ResumeList = () => {
 
   if (error) {
     return (
-      <div className="text-center text-red-600 min-h-[400px] flex flex-col items-center justify-center">
+      <div className="text-center text-red min-h-[400px] flex flex-col items-center justify-center">
         <p className="text-lg font-semibold mb-2">Fehler beim Laden der Kandidaten</p>
         <p className="text-sm mb-4">{error}</p>
         <Button onClick={fetchResumes} variant="outline">
@@ -145,8 +157,8 @@ export const ResumeList = () => {
 
   if (resumes.length === 0) {
     return (
-      <div className="text-center text-gray-500 min-h-[400px] flex flex-col items-center justify-center">
-        <FileText className="h-16 w-16 text-gray-300 mb-4" />
+      <div className="text-center text-gray-950 min-h-[400px] flex flex-col items-center justify-center">
+        <FileText className="h-16 w-16 text-gray-200 mb-4" />
         <p className="text-lg font-semibold mb-2">Keine Kandidaten gefunden</p>
         <p className="text-sm mb-4">
           {searchParams.toString() 
@@ -172,17 +184,17 @@ export const ResumeList = () => {
           <div
             key={resume.id}
             onClick={() => handleResumeClick(resume.id)}
-            className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:border-blue-500 hover:shadow-md transition-all cursor-pointer group"
+            className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:border-blue hover:shadow-md transition-all cursor-pointer group"
           >
             <div className="flex items-start justify-between">
               <div className="flex items-start gap-4 flex-1">
                 <div className="p-3 bg-blue-50 rounded-lg group-hover:bg-blue-100 transition-colors">
-                  <FileText className="h-6 w-6 text-blue-600" />
+                  <FileText className="h-6 w-6 text-blue" />
                 </div>
                 
                 <div className="flex-1">
                   <div className="flex items-center gap-3 mb-2">
-                    <h3 className="font-semibold text-lg text-gray-900 group-hover:text-blue-600 transition-colors">
+                    <h3 className="font-semibold text-lg text-gray-950 group-hover:text-blue transition-colors">
                       {resume.name || resume.fileName}
                     </h3>
                     {resume.senioritaet && (
@@ -193,10 +205,10 @@ export const ResumeList = () => {
                   </div>
                   
                   {resume.title && (
-                    <p className="text-gray-700 font-medium mb-2">{resume.title}</p>
+                    <p className="text-gray-950 font-medium mb-2">{resume.title}</p>
                   )}
                   
-                  <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
+                  <div className="flex flex-wrap items-center gap-4 text-sm text-gray-950">
                     <div className="flex items-center gap-1">
                       <Calendar className="h-4 w-4" />
                       <span>{formatDate(resume.uploadedAt)}</span>
@@ -227,7 +239,7 @@ export const ResumeList = () => {
                         <Badge 
                           key={index} 
                           variant="outline"
-                          className="text-xs"
+                          className={getSkillBadgeColor(skill)}
                         >
                           {skill}
                         </Badge>
@@ -260,7 +272,7 @@ export const ResumeList = () => {
       {/* Pagination */}
       {pagination && pagination.totalPages > 1 && (
         <div className="mt-8 flex items-center justify-between">
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-950">
             Zeige {((pagination.page - 1) * pagination.limit) + 1} bis{' '}
             {Math.min(pagination.page * pagination.limit, pagination.total)} von{' '}
             {pagination.total} Kandidaten

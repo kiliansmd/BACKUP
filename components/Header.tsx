@@ -9,37 +9,44 @@ export const Header = () => {
 
   return (
     <header className="bg-white border-b border-gray-200">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          <Link href="/" className="text-xl font-bold text-gray-900">
-            CV Parser
+      <div className="container mx-auto px-4 py-4">
+        <Link href="/" className="text-xl font-bold text-gray-950">
+          CV-Portal
+        </Link>
+        
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex items-center space-x-6">
+          <Link 
+            href="/" 
+            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              pathname === '/' 
+                ? 'bg-achieve-ka text-white'
+                : 'text-gray-950 hover:bg-gray-50'
+            }`}
+          >
+            Alle Kandidaten
           </Link>
-          
-          <nav className="flex gap-2">
-            <Link
-              href="/"
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-                pathname === '/'
-                  ? 'bg-blue-600 text-white'
-                  : 'text-gray-600 hover:bg-gray-100'
-              }`}
-            >
-              <Upload className="h-4 w-4" />
-              Upload
-            </Link>
-            <Link
-              href="/resumes"
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-colors ${
-                pathname === '/resumes'
-                  ? 'bg-blue-600 text-white'
-                  : 'text-gray-600 hover:bg-gray-100'
-              }`}
-            >
-              <List className="h-4 w-4" />
-              View Resumes
-            </Link>
-          </nav>
-        </div>
+          <Link 
+            href="/upload" 
+            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              pathname === '/upload' 
+                ? 'bg-achieve-ka text-white'
+                : 'text-gray-950 hover:bg-gray-50'
+            }`}
+          >
+            CV hochladen
+          </Link>
+          <Link
+            href="/resumes"
+            className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              pathname === '/resumes'
+                ? 'bg-achieve-ka text-white'
+                : 'text-gray-950 hover:bg-gray-50'
+            }`}
+          >
+            View Resumes
+          </Link>
+        </nav>
       </div>
     </header>
   );

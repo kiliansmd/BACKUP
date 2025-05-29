@@ -53,36 +53,36 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Neue Farbpalette basierend auf dem Screenshot
+        // Vereinheitlichte Farbpalette basierend auf dem Screenshot
         white: "#FFFFFF",
         black: "#000000",
+        // Gray Farben aus dem Screenshot
         gray: {
-          50: "#F9FAFB",
-          100: "#F3F4F6",
-          200: "#E5E7EB",
-          300: "#D1D5DB",
-          400: "#9CA3AF",
-          500: "#6B7280",
-          600: "#4B5563",
-          700: "#374151",
-          800: "#1F2937",
-          900: "#111827",
+          50: "#F9FAFB",     // Gray 50
+          200: "#E5E7EB",    // Gray 200 [Dynamic]
+          950: "#030712",    // Gray 950 [Dynamic]
         },
-        purple: "#4F46E5",
-        blue: "#3B82F6",
-        green: {
-          DEFAULT: "#0070f3",
-          50: "#f0f7ff",
-          100: "#e0f0fe",
-          200: "#bae0fd",
-          300: "#7cc5fb",
-          400: "#36a4f8",
-          500: "#0c87e8",
-          600: "#0070f3",
-          700: "#0058c7",
-          800: "#0149a0",
-          900: "#013d83",
+        // Achieve KA - Primäre lila/blaue Farbe
+        "achieve-ka": "#6366F1",
+        // Achieve Mid - Dunklere lila/blaue Farbe
+        "achieve-mid": "#4F46E5",
+        // Blue aus dem Screenshot
+        blue: {
+          DEFAULT: "#3B82F6",
+          50: "#EFF6FF",
+          100: "#DBEAFE",
+          200: "#BFDBFE",
+          300: "#93C5FD",
+          400: "#60A5FA",
+          500: "#3B82F6",
+          600: "#2563EB",
+          700: "#1D4ED8",
+          800: "#1E40AF",
+          900: "#1E3A8A",
         },
+        // Royal blue-6 aus dem Screenshot
+        "royal-blue": "#1E40AF",
+        // Yellow aus dem Screenshot
         yellow: {
           DEFAULT: "#F59E0B",
           50: "#FFFBEB",
@@ -96,7 +96,17 @@ const config = {
           800: "#92400E",
           900: "#78350F",
         },
-        orange: "#F97316",
+        // Semantic colors mapped to the screenshot colors
+        purple: "#6366F1", // Maps to Achieve KA
+        green: "#93CEC0", // Mint-300 - main green
+        mint: {
+          50: "#EBF8F4",   // mint-50
+          100: "#D0EAE2",  // mint-100  
+          200: "#B3DCD0",  // mint-200
+          300: "#93CEC0",  // mint-300
+        },
+        red: "#EF4444",   // We keep this for errors
+        orange: "#F97316", // We keep this for warnings
       },
       borderRadius: {
         lg: "var(--radius)",

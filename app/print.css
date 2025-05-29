@@ -137,7 +137,7 @@
 
   /* Spezifische Anpassungen für den Druck */
   .bg-black,
-  .bg-gray-900,
+  .bg-gray-950,
   .bg-purple,
   [style*="background-color: #0a2e65"] {
     background-color: white !important;
@@ -145,8 +145,8 @@
   }
 
   .text-white,
-  .text-gray-300,
-  .text-gray-400 {
+  .text-gray-200,
+  .text-gray-950 {
     color: black !important;
   }
 
