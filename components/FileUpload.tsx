@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useState, useRef } from 'react';
-import { Upload, FileText, CheckCircle, AlertCircle, X, Sparkles, Cloud, Zap, Shield, Brain } from 'lucide-react';
+import { Upload, FileText, CheckCircle, AlertCircle, X, Sparkles, Cloud, Zap } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -226,7 +226,7 @@ export const FileUpload = ({ onUploadSuccess }: FileUploadProps) => {
                   ? 'Wird verarbeitet...'
                   : isDragActive
                   ? 'Datei hier ablegen!'
-                  : 'Acme Inc. CV-Analyse'
+                  : 'CV hochladen'
                 }
               </h3>
               
@@ -244,7 +244,7 @@ export const FileUpload = ({ onUploadSuccess }: FileUploadProps) => {
                   ? 'Ihre Datei wird analysiert und pseudonymisiert...'
                   : isDragActive
                   ? 'Lassen Sie die Datei los, um sie hochzuladen'
-                  : 'Premium KI-Analyse mit vollständiger DSGVO-Anonymisierung'
+                  : 'Drag & Drop oder klicken zum Hochladen'
                 }
               </p>
 
@@ -367,66 +367,6 @@ export const FileUpload = ({ onUploadSuccess }: FileUploadProps) => {
           </div>
         </div>
       )}
-
-      {/* Info Section - Updated Styling */}
-      <div className="max-w-4xl mx-auto bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 rounded-3xl p-12 text-center shadow-2xl border border-gray-700/20">
-        <div className="space-y-8">
-          <div className="flex items-center justify-center gap-4 mb-6">
-            <div className="w-16 h-16 bg-white/10 backdrop-blur-sm rounded-3xl flex items-center justify-center shadow-2xl p-2">
-              <Image 
-                src="/logo-white.png" 
-                alt="Company Logo" 
-                width={48} 
-                height={48} 
-              />
-            </div>
-            <h3 className="text-2xl font-bold text-white">Acme Inc. Premium CV-Analyse</h3>
-          </div>
-          
-          <p className="text-gray-300 text-lg">Professioneller 3-Stufen-Prozess für exklusive Kandidatenprofile</p>
-          
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="space-y-3">
-              <div className="w-16 h-16 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto">
-                <Upload className="h-8 w-8 text-white" />
-              </div>
-              <h4 className="font-semibold text-white">1. Sicherer Upload</h4>
-              <p className="text-sm text-gray-300">Sichere Übertragung mit modernster Verschlüsselung</p>
-            </div>
-            
-            <div className="space-y-3">
-              <div className="w-16 h-16 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto">
-                <Brain className="h-8 w-8 text-white" />
-              </div>
-              <h4 className="font-semibold text-white">2. KI-Analyse & Pseudonymisierung</h4>
-              <p className="text-sm text-gray-300">Intelligente Extraktion mit sofortiger DSGVO-konformer Anonymisierung</p>
-            </div>
-            
-            <div className="space-y-3">
-              <div className="w-16 h-16 bg-white/10 backdrop-blur-sm rounded-2xl flex items-center justify-center mx-auto">
-                <Shield className="h-8 w-8 text-white" />
-              </div>
-              <h4 className="font-semibold text-white">3. Premium Profil</h4>
-              <p className="text-sm text-gray-300">Hochwertiges, DSGVO-konformes Kandidatenprofil verfügbar</p>
-            </div>
-          </div>
-          
-          <div className="flex items-center justify-center gap-8 text-gray-300 mt-8">
-            <span className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse" />
-              <span className="font-medium">System Online</span>
-            </span>
-            <span className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-blue-400 rounded-full animate-pulse delay-300" />
-              <span className="font-medium">Pseudonymisierung Active</span>
-            </span>
-            <span className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-yellow-400 rounded-full animate-pulse delay-700" />
-              <span className="font-medium">DSGVO-konform</span>
-            </span>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
