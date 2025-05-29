@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Share2, Copy, Clock, Eye, Check, Settings, X, Calendar, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -28,6 +28,37 @@ export function ShareButton({ candidateId, candidateName, className = '' }: Shar
   });
   const { toast } = useToast();
 
+  // Cleanup function
+  const closeModal = () => {
+    setIsOpen(false);
+    setShareUrl(null);
+    setShareData(null);
+    setOptions({
+      expirationHours: 72,
+      maxAccess: undefined
+    });
+  };
+
+  // Handle escape key
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && isOpen) {
+        closeModal();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape);
+      // Prevent body scroll
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
+
   const generateShareLink = async () => {
     setLoading(true);
     try {
@@ -48,7 +79,8 @@ export function ShareButton({ candidateId, candidateName, className = '' }: Shar
       });
 
       if (!response.ok) {
-        throw new Error('Fehler beim Erstellen des Share-Links');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `HTTP ${response.status}: Fehler beim Erstellen des Share-Links`);
       }
 
       const result = await response.json();
@@ -60,9 +92,10 @@ export function ShareButton({ candidateId, candidateName, className = '' }: Shar
         description: "Der sichere Link wurde erfolgreich generiert",
       });
     } catch (error) {
+      console.error('ShareButton Error:', error);
       toast({
         title: "Fehler",
-        description: "Share-Link konnte nicht erstellt werden",
+        description: error instanceof Error ? error.message : "Share-Link konnte nicht erstellt werden",
         variant: "destructive"
       });
     } finally {
@@ -103,7 +136,14 @@ export function ShareButton({ candidateId, candidateName, className = '' }: Shar
 
   if (isOpen) {
     return (
-      <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div 
+        className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+        onClick={(e) => {
+          if (e.target === e.currentTarget) {
+            closeModal();
+          }
+        }}
+      >
         <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
           {/* Header */}
           <div className="p-6 border-b border-gray-200">
@@ -120,7 +160,7 @@ export function ShareButton({ candidateId, candidateName, className = '' }: Shar
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => setIsOpen(false)}
+                onClick={closeModal}
                 className="text-gray-400 hover:text-gray-600"
               >
                 <X className="h-5 w-5" />

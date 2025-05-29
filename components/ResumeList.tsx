@@ -8,6 +8,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ShareButton } from '@/components/ShareButton';
+import { generateAnonymousDocumentName, generateAnonymousCandidateName, extractSeniorityFromTitle } from '@/utils/anonymize-helpers';
 import { appConfig } from '@/config/app.config';
 
 interface Resume {
@@ -173,6 +174,21 @@ export const ResumeList = () => {
       return 'bg-gray-600/10 text-gray-600 border-gray-600/20 hover:bg-gray-600/20 transition-all duration-200';
     }
     return 'bg-gray-50 text-gray-900 border-gray-200 hover:bg-gray-100 transition-all duration-200';
+  };
+
+  // Hilfsfunktion für anonymisierte Namen
+  const getDisplayName = (resume: Resume, index: number) => {
+    return generateAnonymousCandidateName(resume.title, resume.id, index);
+  };
+
+  // Hilfsfunktion für Share-Button Namen
+  const getShareName = (resume: Resume, index: number) => {
+    return generateAnonymousDocumentName(resume.title, resume.id, resume.uploadedAt);
+  };
+
+  // Hilfsfunktion für Seniority (falls nicht vorhanden)
+  const getEffectiveSeniority = (resume: Resume) => {
+    return resume.senioritaet || extractSeniorityFromTitle(resume.title);
   };
 
   // Premium Skeleton mit Animation
@@ -343,13 +359,16 @@ export const ResumeList = () => {
                   {/* Header */}
                   <div className="flex items-center gap-4">
                     <h3 className="text-2xl font-bold text-gray-900 group-hover:text-gray-700 transition-colors duration-300">
-                      {resume.name || resume.fileName}
+                      {getDisplayName(resume, index)}
                     </h3>
-                    {resume.senioritaet && (
-                      <Badge className={`${getSeniorityColor(resume.senioritaet)} font-semibold px-4 py-1.5`}>
-                        {resume.senioritaet}
-                      </Badge>
-                    )}
+                    {(() => {
+                      const effectiveSeniority = getEffectiveSeniority(resume);
+                      return effectiveSeniority && effectiveSeniority !== 'Mid-Level' ? (
+                        <Badge className={`${getSeniorityColor(effectiveSeniority)} font-semibold px-4 py-1.5`}>
+                          {effectiveSeniority}
+                        </Badge>
+                      ) : null;
+                    })()}
                     {!resume.isNew && (
                       <div className="flex items-center gap-1 text-gray-500 text-sm">
                         <Eye className="h-4 w-4" />
@@ -420,7 +439,7 @@ export const ResumeList = () => {
               <div className="flex gap-3">
                 <ShareButton
                   candidateId={resume.id}
-                  candidateName={resume.name || resume.fileName}
+                  candidateName={getDisplayName(resume, index)}
                   className="opacity-0 group-hover:opacity-100 transition-all duration-300 bg-green-600/10 hover:bg-green-600 text-green-600 hover:text-white border-green-600/30 hover:border-green-600"
                 />
                 <Button

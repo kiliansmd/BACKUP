@@ -7,6 +7,7 @@ import { ResumeSkeleton } from '@/components/ui/resume-skeleton';
 import { BreadcrumbNav } from '@/components/ui/breadcrumb-nav';
 import { MobileMenu } from '@/components/MobileMenu';
 import { PseudonymizationDebug } from '@/components/PseudonymizationDebug';
+import { generateAnonymousCandidateName } from '@/utils/anonymize-helpers';
 import { appConfig } from '@/config/app.config';
 import type { Kandidat, AccountManager, NavigationItem } from '@/types/kandidat';
 import { useToast } from '@/hooks/use-toast';
@@ -452,11 +453,11 @@ export default function CandidateDetailsPage() {
     <>
       <BreadcrumbNav items={[
         { label: 'Kandidaten', href: '/resumes' },
-        { label: kandidat.name || 'Kandidat' }
+        { label: generateAnonymousCandidateName(kandidat.name) }
       ]} />
       
       <div className="fixed top-4 right-4 z-50 flex gap-2 print:hidden">
-        <MobileMenu navSections={navSections} kandidatName={kandidat.name} />
+        <MobileMenu navSections={navSections} kandidatName={generateAnonymousCandidateName(kandidat.name)} />
       </div>
       
       <main id="main" className="min-h-screen bg-white">
