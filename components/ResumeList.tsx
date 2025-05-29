@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { ShareButton } from '@/components/ShareButton';
 import { appConfig } from '@/config/app.config';
 
 interface Resume {
@@ -416,14 +417,21 @@ export const ResumeList = () => {
               </div>
               
               {/* Enhanced Action Button - Premium Design */}
-              <Button
-                variant="ghost"
-                size="lg"
-                className="opacity-0 group-hover:opacity-100 transition-all duration-300 bg-gray-900/10 hover:bg-gray-900 text-gray-900 hover:text-white px-6 py-3 rounded-2xl shadow-lg hover:shadow-xl font-semibold"
-              >
-                <Eye className="h-5 w-5 mr-2" />
-                Profil ansehen
-              </Button>
+              <div className="flex gap-3">
+                <ShareButton
+                  candidateId={resume.id}
+                  candidateName={resume.name || resume.fileName}
+                  className="opacity-0 group-hover:opacity-100 transition-all duration-300 bg-green-600/10 hover:bg-green-600 text-green-600 hover:text-white border-green-600/30 hover:border-green-600"
+                />
+                <Button
+                  variant="ghost"
+                  size="lg"
+                  className="opacity-0 group-hover:opacity-100 transition-all duration-300 bg-gray-900/10 hover:bg-gray-900 text-gray-900 hover:text-white px-6 py-3 rounded-2xl shadow-lg hover:shadow-xl font-semibold"
+                >
+                  <Eye className="h-5 w-5 mr-2" />
+                  Profil ansehen
+                </Button>
+              </div>
             </div>
           </div>
         ))}
