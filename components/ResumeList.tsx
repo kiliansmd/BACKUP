@@ -1,8 +1,8 @@
-// components/ResumeList.tsx - Optimierte Version mit Pagination
+// components/ResumeList.tsx - Premium Redesign mit NEU Tags und verbessertem Design
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
-import { FileText, Calendar, MapPin, Briefcase, ChevronLeft, ChevronRight } from 'lucide-react';
+import { FileText, Calendar, MapPin, Briefcase, ChevronLeft, ChevronRight, Clock, Star, Eye, Sparkles } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
@@ -27,6 +27,8 @@ interface Resume {
   };
   skills?: string[];
   senioritaet?: string;
+  lastViewed?: number; // Timestamp der letzten Ansicht
+  isNew?: boolean; // Computed: noch nie angesehen
 }
 
 interface PaginationInfo {
@@ -41,9 +43,20 @@ export const ResumeList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [pagination, setPagination] = useState<PaginationInfo | null>(null);
+  const [viewedResumes, setViewedResumes] = useState<Set<string>>(new Set());
   
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  // Load viewed resumes from localStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const viewed = localStorage.getItem('viewedResumes');
+      if (viewed) {
+        setViewedResumes(new Set(JSON.parse(viewed)));
+      }
+    }
+  }, []);
 
   const fetchResumes = useCallback(async () => {
     setLoading(true);
@@ -60,7 +73,19 @@ export const ResumeList = () => {
       const result = await response.json();
       
       if (result.success && result.data) {
-        setResumes(result.data.resumes || []);
+        const resumesData = result.data.resumes || [];
+        
+        // Sort by upload date (newest first) and add isNew flag
+        const sortedResumes = resumesData
+          .sort((a: Resume, b: Resume) => {
+            return b.uploadedAt._seconds - a.uploadedAt._seconds;
+          })
+          .map((resume: Resume) => ({
+            ...resume,
+            isNew: !viewedResumes.has(resume.id)
+          }));
+        
+        setResumes(sortedResumes);
         setPagination(result.data.pagination || null);
       } else {
         setResumes(result || []);
@@ -70,13 +95,28 @@ export const ResumeList = () => {
     } finally {
       setLoading(false);
     }
-  }, [searchParams]);
+  }, [searchParams, viewedResumes]);
 
   useEffect(() => {
     fetchResumes();
   }, [fetchResumes]);
 
   const handleResumeClick = (id: string) => {
+    // Mark as viewed
+    const newViewed = new Set(viewedResumes);
+    newViewed.add(id);
+    setViewedResumes(newViewed);
+    
+    // Save to localStorage
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('viewedResumes', JSON.stringify([...newViewed]));
+    }
+    
+    // Update local state to remove "NEW" badge immediately
+    setResumes(prev => prev.map(resume => 
+      resume.id === id ? { ...resume, isNew: false } : resume
+    ));
+    
     router.push(`/candidate/${id}`);
   };
 
@@ -87,55 +127,86 @@ export const ResumeList = () => {
   };
 
   const formatDate = (uploadedAt: { _seconds: number }) => {
-    return new Date(uploadedAt._seconds * 1000).toLocaleDateString('de-DE', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+    const date = new Date(uploadedAt._seconds * 1000);
+    const now = new Date();
+    const diffInMs = now.getTime() - date.getTime();
+    const diffInHours = diffInMs / (1000 * 60 * 60);
+    const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+
+    if (diffInHours < 1) {
+      return 'Gerade eben';
+    } else if (diffInHours < 24) {
+      return `vor ${Math.floor(diffInHours)} Stunden`;
+    } else if (diffInDays < 7) {
+      return `vor ${Math.floor(diffInDays)} Tagen`;
+    } else {
+      return date.toLocaleDateString('de-DE', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      });
+    }
   };
 
   const getSeniorityColor = (seniority?: string) => {
     switch (seniority?.toLowerCase()) {
       case 'senior':
-        return 'bg-purple-100 text-achieve-mid border-purple-200';
+        return 'bg-gradient-to-r from-achieve-ka/10 to-achieve-mid/10 text-achieve-ka border-achieve-ka/30 shadow-achieve-ka/10';
       case 'mid':
       case 'mid-level':
-        return 'bg-blue-100 text-blue border-blue-200';
+        return 'bg-gradient-to-r from-blue/10 to-royal-blue/10 text-blue border-blue/30 shadow-blue/10';
       case 'junior':
-        return 'bg-mint-100 text-mint-300 border-mint-200';
+        return 'bg-gradient-to-r from-mint-100 to-mint-200 text-mint-300 border-mint-300/50 shadow-mint-300/10';
       default:
-        return 'bg-gray-50 text-gray-950 border-gray-200';
+        return 'bg-gradient-to-r from-gray-50 to-gray-100 text-gray-950 border-gray-200 shadow-gray-200/10';
     }
   };
 
   const getSkillBadgeColor = (skill: string) => {
     const hash = skill.toLowerCase().charCodeAt(0);
     if (hash % 4 === 0) {
-      return 'bg-achieve-ka/10 text-achieve-ka border-achieve-ka/20';
+      return 'bg-achieve-ka/10 text-achieve-ka border-achieve-ka/20 hover:bg-achieve-ka/20 transition-all duration-200';
     } else if (hash % 4 === 1) {
-      return 'bg-blue-50 text-blue border-blue/20';
+      return 'bg-blue/10 text-blue border-blue/20 hover:bg-blue/20 transition-all duration-200';
     } else if (hash % 4 === 2) {
-      return 'bg-yellow-50 text-yellow border-yellow/20';
+      return 'bg-yellow/10 text-yellow border-yellow/20 hover:bg-yellow/20 transition-all duration-200';
     }
-    return 'bg-gray-50 text-gray-950 border-gray-200';
+    return 'bg-gray-50 text-gray-950 border-gray-200 hover:bg-gray-100 transition-all duration-200';
   };
 
+  // Premium Skeleton mit Animation
   if (loading && resumes.length === 0) {
     return (
-      <div className="space-y-4">
+      <div className="space-y-6">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+          <div key={i} className="group relative bg-white p-8 rounded-2xl shadow-sm border border-gray-200 hover:shadow-xl transition-all duration-500 animate-pulse">
             <div className="flex items-start justify-between">
-              <div className="flex items-center gap-3">
-                <Skeleton className="h-12 w-12 rounded-lg" />
-                <div>
-                  <Skeleton className="h-5 w-48 mb-2" />
-                  <Skeleton className="h-4 w-32" />
+              <div className="flex items-start gap-6 flex-1">
+                <div className="relative">
+                  <Skeleton className="h-16 w-16 rounded-2xl" />
+                  <div className="absolute -top-2 -right-2">
+                    <Skeleton className="h-6 w-12 rounded-full" />
+                  </div>
+                </div>
+                <div className="flex-1 space-y-3">
+                  <div className="flex items-center gap-3">
+                    <Skeleton className="h-7 w-64" />
+                    <Skeleton className="h-6 w-20 rounded-full" />
+                  </div>
+                  <Skeleton className="h-5 w-48" />
+                  <div className="flex gap-4">
+                    <Skeleton className="h-4 w-32" />
+                    <Skeleton className="h-4 w-24" />
+                    <Skeleton className="h-4 w-28" />
+                  </div>
+                  <div className="flex gap-2">
+                    {[1, 2, 3, 4].map((j) => (
+                      <Skeleton key={j} className="h-6 w-16 rounded-full" />
+                    ))}
+                  </div>
                 </div>
               </div>
-              <Skeleton className="h-8 w-20" />
+              <Skeleton className="h-10 w-28 rounded-xl" />
             </div>
           </div>
         ))}
@@ -145,10 +216,17 @@ export const ResumeList = () => {
 
   if (error) {
     return (
-      <div className="text-center text-red min-h-[400px] flex flex-col items-center justify-center">
-        <p className="text-lg font-semibold mb-2">Fehler beim Laden der Kandidaten</p>
-        <p className="text-sm mb-4">{error}</p>
-        <Button onClick={fetchResumes} variant="outline">
+      <div className="text-center min-h-[500px] flex flex-col items-center justify-center bg-gradient-to-br from-red/5 to-orange/5 rounded-3xl border border-red/10 p-12">
+        <div className="w-20 h-20 bg-red/10 rounded-2xl flex items-center justify-center mb-6">
+          <FileText className="h-10 w-10 text-red" />
+        </div>
+        <h3 className="text-2xl font-bold text-gray-950 mb-3">Fehler beim Laden</h3>
+        <p className="text-gray-950 mb-6 max-w-md">{error}</p>
+        <Button 
+          onClick={fetchResumes} 
+          className="bg-red hover:bg-red/90 text-white px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+        >
+          <Star className="h-4 w-4 mr-2" />
           Erneut versuchen
         </Button>
       </div>
@@ -157,20 +235,33 @@ export const ResumeList = () => {
 
   if (resumes.length === 0) {
     return (
-      <div className="text-center text-gray-950 min-h-[400px] flex flex-col items-center justify-center">
-        <FileText className="h-16 w-16 text-gray-200 mb-4" />
-        <p className="text-lg font-semibold mb-2">Keine Kandidaten gefunden</p>
-        <p className="text-sm mb-4">
+      <div className="text-center min-h-[500px] flex flex-col items-center justify-center bg-gradient-to-br from-gray-50 to-blue/5 rounded-3xl border border-gray-200 p-12">
+        <div className="w-24 h-24 bg-blue/10 rounded-3xl flex items-center justify-center mb-8 relative">
+          <FileText className="h-12 w-12 text-blue" />
+          <div className="absolute -top-2 -right-2 w-8 h-8 bg-yellow rounded-full flex items-center justify-center">
+            <Sparkles className="h-4 w-4 text-white" />
+          </div>
+        </div>
+        <h3 className="text-3xl font-bold text-gray-950 mb-4">Noch keine Kandidaten</h3>
+        <p className="text-lg text-gray-950 mb-8 max-w-md">
           {searchParams.toString() 
             ? 'Versuchen Sie es mit anderen Filterkriterien.'
             : 'Laden Sie den ersten Lebenslauf hoch, um zu beginnen.'}
         </p>
-        {searchParams.toString() && (
+        {searchParams.toString() ? (
           <Button 
             onClick={() => router.push('/resumes')} 
-            variant="outline"
+            className="bg-blue hover:bg-blue/90 text-white px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
           >
             Filter zurücksetzen
+          </Button>
+        ) : (
+          <Button 
+            onClick={() => router.push('/')} 
+            className="bg-achieve-ka hover:bg-achieve-ka/90 text-white px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+          >
+            <FileText className="h-5 w-5 mr-2" />
+            Ersten CV hochladen
           </Button>
         )}
       </div>
@@ -178,46 +269,108 @@ export const ResumeList = () => {
   }
 
   return (
-    <div>
-      <div className="grid gap-4">
-        {resumes.map((resume) => (
+    <div className="space-y-8">
+      {/* Stats Header */}
+      <div className="bg-gradient-to-r from-achieve-ka/5 to-blue/5 rounded-2xl p-6 border border-achieve-ka/10">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-950 mb-1">
+              {pagination?.total || resumes.length} Kandidaten gefunden
+            </h2>
+            <p className="text-gray-950 flex items-center gap-2">
+              <Clock className="h-4 w-4" />
+              Sortiert nach Erstellungsdatum (neueste zuerst)
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            {resumes.filter(r => r.isNew).length > 0 && (
+              <div className="flex items-center gap-2 bg-yellow/10 text-yellow px-4 py-2 rounded-xl border border-yellow/20">
+                <Sparkles className="h-4 w-4" />
+                <span className="font-medium">
+                  {resumes.filter(r => r.isNew).length} neue
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Premium Resume Cards */}
+      <div className="space-y-6">
+        {resumes.map((resume, index) => (
           <div
             key={resume.id}
             onClick={() => handleResumeClick(resume.id)}
-            className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 hover:border-blue hover:shadow-md transition-all cursor-pointer group"
+            className="group relative bg-white p-8 rounded-3xl shadow-sm border border-gray-200 hover:shadow-2xl hover:border-blue/30 transition-all duration-500 cursor-pointer overflow-hidden"
+            style={{
+              animationDelay: `${index * 100}ms`,
+              animation: 'slideInUp 0.6s ease-out forwards'
+            }}
           >
-            <div className="flex items-start justify-between">
-              <div className="flex items-start gap-4 flex-1">
-                <div className="p-3 bg-blue-50 rounded-lg group-hover:bg-blue-100 transition-colors">
-                  <FileText className="h-6 w-6 text-blue" />
+            {/* Gradient Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-r from-achieve-ka/0 via-transparent to-blue/0 group-hover:from-achieve-ka/5 group-hover:to-blue/5 transition-all duration-500 rounded-3xl" />
+            
+            {/* NEW Badge */}
+            {resume.isNew && (
+              <div className="absolute -top-2 -right-2 z-10">
+                <div className="bg-gradient-to-r from-yellow to-orange text-white px-4 py-2 rounded-2xl shadow-lg animate-pulse">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="h-4 w-4" />
+                    <span className="font-bold text-sm">NEU</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="relative z-10 flex items-start justify-between">
+              <div className="flex items-start gap-6 flex-1">
+                {/* Enhanced Icon */}
+                <div className="relative">
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue/10 to-achieve-ka/10 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                    <FileText className="h-8 w-8 text-blue group-hover:text-achieve-ka transition-colors duration-300" />
+                  </div>
+                  {resume.isNew && (
+                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-yellow rounded-full animate-ping" />
+                  )}
                 </div>
                 
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <h3 className="font-semibold text-lg text-gray-950 group-hover:text-blue transition-colors">
+                <div className="flex-1 space-y-4">
+                  {/* Header */}
+                  <div className="flex items-center gap-4">
+                    <h3 className="text-2xl font-bold text-gray-950 group-hover:text-blue transition-colors duration-300">
                       {resume.name || resume.fileName}
                     </h3>
                     {resume.senioritaet && (
-                      <Badge className={getSeniorityColor(resume.senioritaet)}>
+                      <Badge className={`${getSeniorityColor(resume.senioritaet)} shadow-lg font-semibold px-4 py-1.5`}>
                         {resume.senioritaet}
                       </Badge>
                     )}
+                    {!resume.isNew && (
+                      <div className="flex items-center gap-1 text-gray-500 text-sm">
+                        <Eye className="h-4 w-4" />
+                        <span>Bereits angesehen</span>
+                      </div>
+                    )}
                   </div>
                   
+                  {/* Title */}
                   {resume.title && (
-                    <p className="text-gray-950 font-medium mb-2">{resume.title}</p>
+                    <p className="text-lg font-medium text-gray-950 bg-gray-50 px-4 py-2 rounded-xl inline-block">
+                      {resume.title}
+                    </p>
                   )}
                   
-                  <div className="flex flex-wrap items-center gap-4 text-sm text-gray-950">
-                    <div className="flex items-center gap-1">
-                      <Calendar className="h-4 w-4" />
-                      <span>{formatDate(resume.uploadedAt)}</span>
+                  {/* Meta Information */}
+                  <div className="flex flex-wrap items-center gap-6 text-gray-950">
+                    <div className="flex items-center gap-2 bg-blue/5 px-3 py-2 rounded-xl">
+                      <Calendar className="h-5 w-5 text-blue" />
+                      <span className="font-medium">{formatDate(resume.uploadedAt)}</span>
                     </div>
                     
                     {(resume.contact?.location_city || resume.contact?.location_country) && (
-                      <div className="flex items-center gap-1">
-                        <MapPin className="h-4 w-4" />
-                        <span>
+                      <div className="flex items-center gap-2 bg-achieve-ka/5 px-3 py-2 rounded-xl">
+                        <MapPin className="h-5 w-5 text-achieve-ka" />
+                        <span className="font-medium">
                           {[resume.contact.location_city, resume.contact.location_country]
                             .filter(Boolean)
                             .join(', ')}
@@ -226,30 +379,31 @@ export const ResumeList = () => {
                     )}
                     
                     {resume.derived?.years_of_experience !== undefined && (
-                      <div className="flex items-center gap-1">
-                        <Briefcase className="h-4 w-4" />
-                        <span>{resume.derived.years_of_experience} Jahre Erfahrung</span>
+                      <div className="flex items-center gap-2 bg-yellow/5 px-3 py-2 rounded-xl">
+                        <Briefcase className="h-5 w-5 text-yellow" />
+                        <span className="font-medium">{resume.derived.years_of_experience} Jahre Erfahrung</span>
                       </div>
                     )}
                   </div>
                   
+                  {/* Skills */}
                   {resume.skills && resume.skills.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mt-3">
-                      {resume.skills.slice(0, 5).map((skill, index) => (
+                    <div className="flex flex-wrap gap-3">
+                      {resume.skills.slice(0, 6).map((skill, skillIndex) => (
                         <Badge 
-                          key={index} 
+                          key={skillIndex} 
                           variant="outline"
-                          className={getSkillBadgeColor(skill)}
+                          className={`${getSkillBadgeColor(skill)} font-medium px-3 py-1.5 shadow-sm`}
                         >
                           {skill}
                         </Badge>
                       ))}
-                      {resume.skills.length > 5 && (
+                      {resume.skills.length > 6 && (
                         <Badge 
                           variant="outline"
-                          className="text-xs bg-gray-50"
+                          className="bg-gray-50 text-gray-950 border-gray-200 font-medium px-3 py-1.5 shadow-sm"
                         >
-                          +{resume.skills.length - 5} weitere
+                          +{resume.skills.length - 6} weitere Skills
                         </Badge>
                       )}
                     </div>
@@ -257,77 +411,101 @@ export const ResumeList = () => {
                 </div>
               </div>
               
+              {/* Enhanced Action Button */}
               <Button
                 variant="ghost"
-                size="sm"
-                className="opacity-0 group-hover:opacity-100 transition-opacity"
+                size="lg"
+                className="opacity-0 group-hover:opacity-100 transition-all duration-300 bg-blue/10 hover:bg-blue text-blue hover:text-white px-6 py-3 rounded-2xl shadow-lg hover:shadow-xl font-semibold"
               >
-                Ansehen →
+                <Eye className="h-5 w-5 mr-2" />
+                Ansehen
               </Button>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Pagination */}
+      {/* Enhanced Pagination */}
       {pagination && pagination.totalPages > 1 && (
-        <div className="mt-8 flex items-center justify-between">
-          <p className="text-sm text-gray-950">
-            Zeige {((pagination.page - 1) * pagination.limit) + 1} bis{' '}
-            {Math.min(pagination.page * pagination.limit, pagination.total)} von{' '}
-            {pagination.total} Kandidaten
-          </p>
-          
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handlePageChange(pagination.page - 1)}
-              disabled={pagination.page === 1}
-            >
-              <ChevronLeft className="h-4 w-4" />
-              Zurück
-            </Button>
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
+          <div className="flex items-center justify-between">
+            <p className="text-lg font-medium text-gray-950">
+              Zeige {((pagination.page - 1) * pagination.limit) + 1} bis{' '}
+              {Math.min(pagination.page * pagination.limit, pagination.total)} von{' '}
+              <span className="font-bold text-blue">{pagination.total}</span> Kandidaten
+            </p>
             
-            <div className="flex items-center gap-1">
-              {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
-                let pageNum;
-                if (pagination.totalPages <= 5) {
-                  pageNum = i + 1;
-                } else if (pagination.page <= 3) {
-                  pageNum = i + 1;
-                } else if (pagination.page >= pagination.totalPages - 2) {
-                  pageNum = pagination.totalPages - 4 + i;
-                } else {
-                  pageNum = pagination.page - 2 + i;
-                }
-                
-                return (
-                  <Button
-                    key={pageNum}
-                    variant={pageNum === pagination.page ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => handlePageChange(pageNum)}
-                    className="w-10"
-                  >
-                    {pageNum}
-                  </Button>
-                );
-              })}
+            <div className="flex items-center gap-3">
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={() => handlePageChange(pagination.page - 1)}
+                disabled={pagination.page === 1}
+                className="px-6 py-3 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300"
+              >
+                <ChevronLeft className="h-5 w-5 mr-2" />
+                Zurück
+              </Button>
+              
+              <div className="flex items-center gap-2">
+                {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
+                  let pageNum;
+                  if (pagination.totalPages <= 5) {
+                    pageNum = i + 1;
+                  } else if (pagination.page <= 3) {
+                    pageNum = i + 1;
+                  } else if (pagination.page >= pagination.totalPages - 2) {
+                    pageNum = pagination.totalPages - 4 + i;
+                  } else {
+                    pageNum = pagination.page - 2 + i;
+                  }
+                  
+                  return (
+                    <Button
+                      key={pageNum}
+                      variant={pageNum === pagination.page ? "default" : "outline"}
+                      size="lg"
+                      onClick={() => handlePageChange(pageNum)}
+                      className={`w-12 h-12 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 ${
+                        pageNum === pagination.page 
+                          ? 'bg-blue text-white shadow-blue/20' 
+                          : 'hover:bg-blue/10'
+                      }`}
+                    >
+                      {pageNum}
+                    </Button>
+                  );
+                })}
+              </div>
+              
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={() => handlePageChange(pagination.page + 1)}
+                disabled={pagination.page === pagination.totalPages}
+                className="px-6 py-3 rounded-xl shadow-sm hover:shadow-lg transition-all duration-300"
+              >
+                Weiter
+                <ChevronRight className="h-5 w-5 ml-2" />
+              </Button>
             </div>
-            
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => handlePageChange(pagination.page + 1)}
-              disabled={pagination.page === pagination.totalPages}
-            >
-              Weiter
-              <ChevronRight className="h-4 w-4" />
-            </Button>
           </div>
         </div>
       )}
+
+      {/* Custom CSS for animations */}
+      <style jsx>{`
+        @keyframes slideInUp {
+          from {
+            opacity: 0;
+            transform: translateY(30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
     </div>
   );
 };
