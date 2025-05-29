@@ -1,10 +1,17 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Header } from '@/components/Header';
-import { KandidatenProfile } from '@/components/kandidaten-profile';
 import { useParams } from 'next/navigation';
+import { KandidatenProfile } from '@/components/kandidaten-profile';
+import { ResumeSkeleton } from '@/components/ui/resume-skeleton';
+import { BreadcrumbNav } from '@/components/ui/breadcrumb-nav';
+import { MobileMenu } from '@/components/MobileMenu';
+import { appConfig } from '@/config/app.config';
 import type { Kandidat, AccountManager, NavigationItem } from '@/types/kandidat';
+import { useToast } from '@/hooks/use-toast';
+import { transformKandidatenDaten } from '@/utils/data-transformer';
+import { db } from '@/lib/firebase';
+import { notFound } from 'next/navigation';
 
 interface ParsedResume {
   name?: string;
@@ -36,11 +43,11 @@ interface ParsedResume {
     studyType?: string;
     note?: string;
   }>;
-  skills?: string[]; // Könnte ein Array von Strings sein
+  skills?: string[];
   languages?: Array<{
     language?: string;
     fluency?: string;
-  }> | string[]; // Kann ein Array von Objekten oder Strings sein
+  }> | string[];
   derived?: {
     years_of_experience?: number;
     approximate_age?: number;
@@ -50,22 +57,17 @@ interface ParsedResume {
     _seconds?: number;
     _nanoseconds?: number;
   };
-  // Annahme weiterer möglicher Felder basierend auf der vorherigen Code-Analyse und den Mapping-Versuchen
-  highlights?: any[];
   certificates?: Array<{
     name?: string;
     description?: string;
     date?: string;
     issuer?: string;
-  }>; // Spezifischerer Typ angenommen basierend auf der Nutzung
+  }>;
   publications?: any[];
   interests?: any[];
   references?: any[];
-  gehalt?: string; // Annahme, dass Gehalt vom Parser kommt
-  verfuegbarkeit?: string; // Annahme, dass Verfügbarkeit vom Parser kommt
-  lebenslauf?: string; // Annahme, dass lebenslauf vom Parser kommt (z.B. als reiner Text)
-  einschaetzung?: string; // Annahme, dass Einschätzung vom Parser kommt
-  jobrollen?: string[]; // Annahme, dass jobrollen vom Parser kommen könnten
+  gehalt?: string;
+  verfuegbarkeit?: string;
   persoenlicheDaten?: {
     geburtsdatum?: string;
     geburtsort?: string;
@@ -86,18 +88,39 @@ export default function CandidateDetailsPage() {
   const [resumeData, setResumeData] = useState<ParsedResume | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     const fetchResumeData = async () => {
       try {
         const response = await fetch(`/api/resume/${id}`);
+        
         if (!response.ok) {
-          throw new Error('Failed to fetch resume data');
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to fetch resume data');
         }
-        const data = await response.json();
+        
+        const result = await response.json();
+        
+        // Handle API response wrapper
+        let data = result.data || result;
+        
+        // Handle Firebase data structure where actual data is under 'parsed'
+        if (data.parsed) {
+          data = { ...data.parsed, ...data }; // Merge parsed data with any additional metadata
+        }
+        
+        console.log("Fetched resume data:", data);
         setResumeData(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch resume data');
+        const errorMessage = err instanceof Error ? err.message : 'Failed to fetch resume data';
+        setError(errorMessage);
+        
+        toast({
+          title: 'Fehler beim Laden',
+          description: errorMessage,
+          variant: 'destructive',
+        });
       } finally {
         setLoading(false);
       }
@@ -106,26 +129,24 @@ export default function CandidateDetailsPage() {
     if (id) {
       fetchResumeData();
     }
-  }, [id]);
+  }, [id, toast]);
 
   const formatDate = (dateStr?: string): string => {
     if (!dateStr) return '';
     if (dateStr === 'Present') return 'Heute';
+    
     try {
-      // Try parsing different date formats
       let date;
       if (dateStr.includes('-')) {
-        // Handle YYYY-MM-DD format
         date = new Date(dateStr);
       } else if (dateStr.match(/^\d{4}$/)) {
-        // Handle year only format
         date = new Date(parseInt(dateStr), 0, 1);
       } else {
-        // Try parsing as is
         date = new Date(dateStr);
       }
       
       if (isNaN(date.getTime())) return dateStr;
+      
       return new Intl.DateTimeFormat('de-DE', { 
         year: 'numeric', 
         month: 'long'
@@ -136,9 +157,7 @@ export default function CandidateDetailsPage() {
   };
 
   const mapResumeToKandidat = (resume: ParsedResume): Kandidat => {
-    // Stellen Sie sicher, dass resume vorhanden ist
     if (!resume) {
-      // Rückgabe eines leeren Kandidat-Objekts mit Default-Werten
       return {
         name: '',
         position: '',
@@ -168,7 +187,6 @@ export default function CandidateDetailsPage() {
       } as Kandidat; 
     }
 
-    // Sicherer Zugriff auf verschachtelte Objekte und Arrays mit Fallbacks
     const contact = resume.contact || {};
     const derived = resume.derived || {};
     const personalData = resume.persoenlicheDaten || {};
@@ -177,104 +195,91 @@ export default function CandidateDetailsPage() {
     const employmentHistory = Array.isArray(resume.employment_history) ? resume.employment_history : [];
     const education = Array.isArray(resume.education) ? resume.education : [];
     const certificates = Array.isArray(resume.certificates) ? resume.certificates : [];
-    const highlights = Array.isArray(resume.highlights) ? resume.highlights : [];
-    const publications = Array.isArray(resume.publications) ? resume.publications : [];
-    const interests = Array.isArray(resume.interests) ? resume.interests : [];
-    const references = Array.isArray(resume.references) ? resume.references : [];
-    const jobrollen = Array.isArray(resume.jobrollen) ? resume.jobrollen : (resume.title ? [resume.title] : []); // jobrollen könnte Array sein oder aus title abgeleitet
-
 
     return {
       name: resume.name || '',
       position: resume.title || '',
-      gehalt: resume.gehalt || 'Auf Anfrage', // Gehalt aus Daten lesen oder Default
+      gehalt: resume.gehalt || 'Auf Anfrage',
       standort: `${contact.location_city || ''}, ${contact.location_country || ''}`,
-      verfuegbarkeit: resume.verfuegbarkeit || 'Sofort', // Verfügbarkeit aus Daten lesen oder Default
+      verfuegbarkeit: resume.verfuegbarkeit || 'Sofort',
       erfahrung: `${derived.years_of_experience ?? 0} Jahre`,
       location: {
-        address: resume.location?.address || 'wewewewewe', // Behält den aktuellen Defaultwert
+        address: resume.location?.address || '',
         postalCode: resume.location?.postalCode || '',
         city: contact.location_city || '',
         countryCode: contact.location_country || '',
         region: resume.location?.region || '',
       },
       kurzprofil: resume.brief || '',
-      lebenslauf: resume.lebenslauf || '', // Annahme: lebenslauf könnte im ParsedResume sein
-      einschaetzung: resume.einschaetzung || resume.brief || '', // Annahme: einschätzung könnte existieren
+      lebenslauf: '',
+      einschaetzung: resume.brief || '',
       senioritaet: (derived.years_of_experience ?? 0) > 5 ? 'Senior' : 'Mid-Level',
-      jobrollen: jobrollen.filter(Boolean),
+      jobrollen: resume.title ? [resume.title] : [],
       kernthemen: skills,
       persoenlicheDaten: {
         geburtsdatum: personalData.geburtsdatum || '',
         geburtsort: personalData.geburtsort || '',
-        wohnort: personalData.wohnort || contact.location_city || '', // Wohnort aus personalData oder contact
+        wohnort: personalData.wohnort || contact.location_city || '',
         familienstand: personalData.familienstand || '',
       },
       softwareKenntnisse: skills.map((skill: any) => ({
         name: (typeof skill === 'string' ? skill : skill?.name) || '',
-        level: (typeof skill === 'object' ? skill?.level : undefined) ?? 80 // Level aus Daten lesen oder Default 80
+        level: (typeof skill === 'object' ? skill?.level : undefined) ?? 80
       })),
       sprachkenntnisse: languages.map((lang: any) => ({
-        // Annahme: language kann String oder Objekt {language, fluency, level} sein
         sprache: (typeof lang === 'string' ? lang : lang?.language) || '',
-        niveau: (typeof lang === 'object' ? lang?.fluency : 'Fließend') || 'Fließend', // Default value
-        level: (typeof lang === 'object' ? lang?.level : undefined) ?? 80 // Level aus Daten lesen oder Default 80
+        niveau: (typeof lang === 'object' ? lang?.fluency : 'Fließend') || 'Fließend',
+        level: (typeof lang === 'object' ? lang?.level : undefined) ?? 80
       })),
-      highlights: highlights.map((highlight: any) => ({ // Mapping annehmen, falls highlights Objekte sind
-         icon: highlight?.icon || '',
-         title: highlight?.title || '',
-         description: highlight?.description || '',
-         metric: highlight?.metric || '',
-         label: highlight?.label || '',
-      })),
+      highlights: [
+        { icon: 'Users', title: 'Netzwerk', description: 'Umfangreiches professionelles Netzwerk', metric: '500+', label: 'Kontakte' },
+        { icon: 'TrendingUp', title: `${derived.years_of_experience ?? 0}+ Jahre`, description: 'Berufserfahrung', metric: `${derived.years_of_experience ?? 0}+`, label: 'Jahre Erfahrung' },
+        { icon: 'Target', title: 'Expertise', description: `Spezialist für ${skills.slice(0, 2).join(' und ')}`, metric: skills.length.toString(), label: 'Kernkompetenzen' },
+        { icon: 'Zap', title: 'Verfügbar', description: resume.verfuegbarkeit || 'Sofort verfügbar', metric: '100%', label: 'Einsatzbereit' }
+      ],
       topSkills: skills.slice(0, 3).map((skill: any) => ({
-        title: (typeof skill === 'string' ? skill : skill?.title) || (typeof skill === 'object' ? skill?.name : '') || '', // title oder name verwenden
-        description: (typeof skill === 'object' ? skill?.description : '') || '',
-        keywords: (typeof skill === 'object' && Array.isArray(skill?.keywords)) ? skill.keywords : [],
+        title: (typeof skill === 'string' ? skill : skill?.title) || '',
+        description: '',
+        keywords: [],
       })),
       work: employmentHistory.map((job: any) => ({
         name: job?.company || '',
-        position: job?.position || '',
-        startDate: formatDate(job?.startDate) || '',
-        endDate: job?.endDate === 'Present' ? 'Heute' : formatDate(job?.endDate) || '',
-        summary: (Array.isArray(job?.description) ? job.description.join('\n') : job?.description) || '',
-        achievements: (Array.isArray(job?.achievements) ? job.achievements : (Array.isArray(job?.description) ? job.description : [])) || [], // achievements oder description verwenden, sicherstellen, dass es ein Array ist
-      })).filter(job => job.name || job.position || job.summary || (job.achievements && job.achievements.length > 0)), // Leere Einträge filtern
+        position: job?.title || job?.position || '',
+        startDate: formatDate(job?.start_date) || formatDate(job?.startDate) || '',
+        endDate: job?.end_date === 'Present' || job?.endDate === 'Present' ? 'Heute' : formatDate(job?.end_date) || formatDate(job?.endDate) || '',
+        summary: (Array.isArray(job?.responsibilities) ? job.responsibilities.join('\n') : (Array.isArray(job?.description) ? job.description.join('\n') : job?.responsibilities || job?.description)) || '',
+        achievements: Array.isArray(job?.responsibilities) ? job.responsibilities : (Array.isArray(job?.description) ? job.description : []),
+      })).filter(job => job.name || job.position),
       education: education.map((edu: any) => ({
-        institution: edu?.institution || '',
+        institution: edu?.institution_name || edu?.institution || '',
         url: edu?.url || '',
-        area: edu?.area || edu?.degree || '', // area oder degree verwenden, falls vorhanden
-        studyType: edu?.studyType || edu?.degree || '', // studyType oder degree verwenden
-        startDate: formatDate(edu?.startDate) || formatDate(edu?.graduationDate) || '', // startDate oder graduationDate verwenden
-        endDate: formatDate(edu?.endDate) || formatDate(edu?.graduationDate) || '', // endDate oder graduationDate verwenden
+        area: edu?.area || edu?.degree || '',
+        studyType: edu?.studyType || edu?.degree || '',
+        startDate: formatDate(edu?.start_date) || formatDate(edu?.startDate) || formatDate(edu?.graduationDate) || '',
+        endDate: formatDate(edu?.end_date) || formatDate(edu?.endDate) || formatDate(edu?.graduationDate) || '',
         note: edu?.note || ''
-      })).filter(edu => edu.institution || edu.area || edu.studyType), // Leere Einträge filtern
-      certificates: certificates.map((cert: any) => ({ // Mapping annehmen
+      })).filter(edu => edu.institution || edu.area),
+      certificates: certificates.map((cert: any) => ({
          name: cert?.name || '',
-         description: cert?.description || '', // Annahme: description Feld existiert
+         description: cert?.description || '',
          date: cert?.date || '',
          issuer: cert?.issuer || '',
-      })).filter(cert => cert.name), // Leere Einträge filtern
+      })).filter(cert => cert.name),
       languages: languages.map((lang: any) => ({
          language: (typeof lang === 'string' ? lang : lang?.language) || '',
          fluency: (typeof lang === 'object' ? lang?.fluency : 'Fließend') || 'Fließend'
-      })).filter(lang => lang.language), // Leere Einträge filtern
-      publications: publications.map((pub: any) => ({ // Mapping annehmen
-        title: pub?.title || '',
-        publisher: pub?.publisher || '',
-        releaseDate: pub?.releaseDate || '',
-        url: pub?.url || '',
-      })).filter(pub => pub.title), // Leere Einträge filtern
-       interests: interests.map((interest: any) => ({ name: interest?.name || ''})).filter(interest => interest.name), // Mapping annehmen
-       references: references.map((reference: any) => ({ name: reference?.name || '', reference: reference?.reference || ''})).filter(ref => ref.name || ref.reference), // Mapping annehmen
+      })).filter(lang => lang.language),
+      publications: [],
+      interests: [],
+      references: [],
     };
   };
 
   const mockAccountManager: AccountManager = {
     name: 'John Doe',
     position: 'Account Manager',
-    email: 'john.doe@example.com',
-    phone: '+49 123 456789'
+    email: appConfig.company.contact.email,
+    phone: appConfig.company.contact.phone,
   };
 
   const generateNavSections = (resume: ParsedResume): NavigationItem[] => {
@@ -282,60 +287,94 @@ export default function CandidateDetailsPage() {
       { id: 'profile', label: 'Profil' }
     ];
 
-    // Überprüfen, ob employment_history ein nicht-leeres Array ist
     if (Array.isArray(resume.employment_history) && resume.employment_history.length > 0) {
-      sections.push({ id: 'experience', label: 'Berufserfahrung' }); // Label angepasst basierend auf der Sektion
+      sections.push({ id: 'experience', label: 'Berufserfahrung' });
     }
-    // Überprüfen, ob education ein nicht-leeres Array ist
     if (Array.isArray(resume.education) && resume.education.length > 0) {
       sections.push({ id: 'education', label: 'Ausbildung' });
     }
-    // Überprüfen, ob skills ein nicht-leeres Array von Strings ist
     if (Array.isArray(resume.skills) && resume.skills.length > 0) {
       sections.push({ id: 'skills', label: 'Fähigkeiten' });
     }
-    // Überprüfen, ob languages ein nicht-leeres Array ist (kann Strings oder Objekte enthalten)
     if (Array.isArray(resume.languages) && resume.languages.length > 0) {
       sections.push({ id: 'languages', label: 'Sprachen' });
     }
-     if (Array.isArray(resume.highlights) && resume.highlights.length > 0) {
-       sections.push({ id: 'highlights', label: 'Highlights' }); // Annahme: Highlights Sektion existiert
-     }
-      if (Array.isArray(resume.certificates) && resume.certificates.length > 0) {
-       sections.push({ id: 'certificates', label: 'Zertifizierungen' }); // Annahme: Zertifizierungen Sektion existiert
-     }
-       if (Array.isArray(resume.publications) && resume.publications.length > 0) {
-       sections.push({ id: 'publications', label: 'Publikationen' }); // Annahme: Publikationen Sektion existiert
-     }
-       if (Array.isArray(resume.interests) && resume.interests.length > 0) {
-       sections.push({ id: 'interests', label: 'Interessen' }); // Annahme: Interessen Sektion existiert
-     }
-        if (Array.isArray(resume.references) && resume.references.length > 0) {
-       sections.push({ id: 'references', label: 'Referenzen' }); // Annahme: Referenzen Sektion existiert
-     }
 
-    return sections.filter(section => document.getElementById(section.id)); // Filtern, falls Sektionen-IDs nicht im HTML existieren
+    return sections;
   };
 
+  if (loading) {
+    return (
+      <>
+        <BreadcrumbNav items={[
+          { label: 'Kandidaten', href: '/resumes' },
+          { label: 'Wird geladen...' }
+        ]} />
+        <ResumeSkeleton />
+      </>
+    );
+  }
+
+  if (error) {
+    return (
+      <main className="min-h-screen bg-gray-50">
+        <BreadcrumbNav items={[
+          { label: 'Kandidaten', href: '/resumes' },
+          { label: 'Fehler' }
+        ]} />
+        <div className="flex flex-col items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <h2 className="text-2xl font-semibold text-gray-900 mb-2">
+              Kandidat konnte nicht geladen werden
+            </h2>
+            <p className="text-gray-600 mb-4">{error}</p>
+            <a 
+              href="/resumes"
+              className="text-blue-600 hover:text-blue-800 underline"
+            >
+              Zurück zur Übersicht
+            </a>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  if (!resumeData) {
+    return (
+      <main className="min-h-screen bg-gray-50">
+        <BreadcrumbNav items={[
+          { label: 'Kandidaten', href: '/resumes' },
+          { label: 'Nicht gefunden' }
+        ]} />
+        <div className="flex items-center justify-center min-h-[400px]">
+          <p className="text-gray-600">Keine Daten gefunden</p>
+        </div>
+      </main>
+    );
+  }
+
+  const kandidat = mapResumeToKandidat(resumeData);
+  const navSections = generateNavSections(resumeData);
+
   return (
-    <main className="min-h-screen bg-gray-50">
-      {loading ? (
-        <div className="flex justify-center items-center min-h-[400px]">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
-        </div>
-      ) : error ? (
-        <div className="text-center text-red-600 min-h-[400px] flex items-center justify-center">
-          {error}
-        </div>
-      ) : resumeData ? (
-        <div className="bg-white">
-          <KandidatenProfile
-            kandidat={mapResumeToKandidat(resumeData)}
-            accountManager={mockAccountManager}
-            navSections={generateNavSections(resumeData)}
-          />
-        </div>
-      ) : null}
-    </main>
+    <>
+      <BreadcrumbNav items={[
+        { label: 'Kandidaten', href: '/resumes' },
+        { label: kandidat.name || 'Kandidat' }
+      ]} />
+      
+      <div className="fixed top-4 right-4 z-50 flex gap-2 print:hidden">
+        <MobileMenu navSections={navSections} kandidatName={kandidat.name} />
+      </div>
+      
+      <main id="main" className="min-h-screen bg-white">
+        <KandidatenProfile
+          kandidat={kandidat}
+          accountManager={mockAccountManager}
+          navSections={navSections}
+        />
+      </main>
+    </>
   );
 } 

@@ -84,7 +84,7 @@ export function transformKandidatenDaten(
         geburtsdatum: "1990",
         geburtsort: resumeDaten.basics.location.city,
         wohnort: `${resumeDaten.basics.location.city}, ${resumeDaten.basics.location.region}`,
-        familienstand: "Ledig",
+        familienstand: "Ledig"
       },
       softwareKenntnisse,
       sprachkenntnisse,
@@ -94,6 +94,9 @@ export function transformKandidatenDaten(
       education,
       certificates,
       languages: resumeDaten.languages,
+      publications: resumeDaten.publications || [],
+      interests: resumeDaten.interests || [],
+      references: resumeDaten.references || []
     }
   } catch (error) {
     console.error("Fehler bei der Datentransformation:", error)

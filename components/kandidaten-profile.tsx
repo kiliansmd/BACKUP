@@ -169,8 +169,8 @@ export function KandidatenProfile({
                 </div>
             </div> */}
 
-            {/* Header mit Logo und Navigation */}
-            <header className="bg-black text-white border-b border-gray-800 sticky top-0 z-10 no-print-element">
+            {/* Header mit optimierten Kontrasten */}
+            <header className="bg-gradient-to-r from-gray-900 to-gray-800 text-white border-b border-gray-700 sticky top-0 z-10 no-print-element shadow-lg">
                 <div className="container mx-auto px-4 py-2 sm:py-3 flex justify-between items-center">
                     <div className="flex items-center gap-4 sm:gap-8">
                         <Image
@@ -187,76 +187,83 @@ export function KandidatenProfile({
                                 <a
                                     key={section.id}
                                     href={`#${section.id}`}
-                                    className="text-sm text-gray-300 hover:text-white transition-colors"
+                                    className="text-sm text-gray-300 hover:text-white transition-colors relative group"
                                 >
                                     {section.label}
+                                    <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-400 transition-all group-hover:w-full"></span>
                                 </a>
                             ))}
                         </nav>
                     </div>
 
                     <div className="flex items-center gap-2 sm:gap-3">
-                        <Badge className="bg-orange-500 text-black font-medium px-2 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm">
+                        <Badge className="bg-gradient-to-r from-amber-500 to-orange-500 text-white font-medium px-2 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm shadow-sm">
                             Premium Profil
                         </Badge>
                         <Button
                             onClick={handlePrint}
                             disabled={isPrinting}
-                            className="bg-white text-purple hover:bg-gray-50 font-medium text-xs sm:text-sm px-2 py-1 sm:px-3 sm:py-2 flex items-center"
+                            className="bg-white text-gray-900 hover:bg-gray-50 font-medium text-xs sm:text-sm px-2 py-1 sm:px-3 sm:py-2 flex items-center shadow-sm"
                         >
                             <Printer className="mr-1 h-3 w-3 sm:h-4 sm:w-4" />
                             {isPrinting ? "Wird vorbereitet..." : "Drucken"}
                         </Button>
-                        <Button className="bg-purple hover:bg-purple/90 text-white text-xs sm:text-sm px-2 py-1 sm:px-4 sm:py-2">
+                        <Button className="bg-gradient-to-r from-indigo-600 to-blue-700 hover:from-indigo-700 hover:to-blue-800 text-white text-xs sm:text-sm px-2 py-1 sm:px-4 sm:py-2 shadow-sm">
                             Kontakt aufnehmen
                         </Button>
                     </div>
                 </div>
             </header>
 
-            {/* Hero Section - Schwarz */}
-            <section className="bg-black text-white py-8 sm:py-12 lg:py-16">
-                <div className="container mx-auto px-4">
+            {/* Hero Section - Optimierte Kontraste */}
+            <section className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white py-8 sm:py-12 lg:py-16 relative overflow-hidden">
+                {/* Subtle background patterns */}
+                <div className="absolute inset-0 opacity-5">
+                    <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500 rounded-full blur-3xl"></div>
+                    <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple rounded-full blur-3xl"></div>
+                </div>
+                
+                <div className="container mx-auto px-4 relative z-10">
                     <div className="max-w-6xl mx-auto">
                         <div className="flex flex-col lg:flex-row gap-6 sm:gap-8">
                             <div className="w-full lg:w-2/3">
                                 <div className="flex flex-wrap items-center gap-2 mb-4">
-                                    <Badge className="bg-blue-600 text-white font-medium px-2 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm">
+                                    <Badge className="bg-blue-600 border-blue-500 text-white font-medium px-2 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm shadow-sm">
                                         {kandidat.senioritaet} Expert Profile
                                     </Badge>
-                                    <Badge className="bg-green-100 text-green-700 border border-green-200 font-medium px-2 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm">
+                                    <Badge className="bg-emerald-100 text-emerald-800 border border-emerald-200 font-medium px-2 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm">
                                         Möchte Sie kennenlernen
                                     </Badge>
                                     <Badge
                                         variant="outline"
-                                        className="border-gray-600 text-gray-300 font-medium px-2 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm bg-gradient-to-r from-gray-900 to-gray-800"
+                                        className="border-gray-500 text-gray-300 font-medium px-2 py-0.5 sm:px-3 sm:py-1 text-xs sm:text-sm bg-gray-800/50 backdrop-blur-sm"
                                     >
-                                        <span className="text-yellow-400 mr-1">#</span>
+                                        <span className="text-amber-400 mr-1">#</span>
                                         7100001451223
                                     </Badge>
                                 </div>
 
-                                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-heading-1 mb-2 text-white font-bold">
+                                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-heading-1 mb-2 text-white font-bold leading-tight">
                                     {kandidat.name}
                                 </h1>
-                                <h2 className="text-xl sm:text-2xl md:text-heading-3 text-blue-400 font-medium mb-4 sm:mb-6">
+                                <h2 className="text-xl sm:text-2xl md:text-heading-3 text-blue-300 font-medium mb-4 sm:mb-6">
                                     {kandidat.position}
                                 </h2>
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4 sm:mb-6">
-                                    <div className="flex items-center gap-2 text-gray-300">
+                                    <div className="flex items-center gap-2 text-gray-200">
                                         <MapPin className="h-4 w-4 sm:h-5 sm:w-5 text-blue-400" />
                                         <span className="text-sm sm:text-base">Standort: {kandidat.standort}</span>
                                     </div>
-                                    <div className="flex items-center gap-2 text-gray-300">
+                                    <div className="flex items-center gap-2 text-gray-200">
                                         <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-blue-400" />
                                         <span className="text-sm sm:text-base">Verfügbarkeit: {kandidat.verfuegbarkeit}</span>
                                     </div>
-                                    <div className="flex items-center gap-2 text-gray-300">
+                                    <div className="flex items-center gap-2 text-gray-200">
                                         <Briefcase className="h-4 w-4 sm:h-5 sm:w-5 text-blue-400" />
                                         <span className="text-sm sm:text-base">Erfahrung: {kandidat.erfahrung}</span>
                                     </div>
-                                    <div className="flex items-center gap-2 text-gray-300">
+                                    <div className="flex items-center gap-2 text-gray-200">
                                         <Award className="h-4 w-4 sm:h-5 sm:w-5 text-blue-400" />
                                         <span className="text-sm sm:text-base">Gehalt: {kandidat.gehalt}</span>
                                     </div>
@@ -264,71 +271,12 @@ export function KandidatenProfile({
 
                                 <div className="flex flex-wrap gap-2 mt-3 sm:mt-4">
                                     {kandidat.kernthemen.map((thema, index) => (
-                                        <Badge key={index} variant="outline" className="border-gray-600 bg-gray-800 text-gray-300 text-xs">
+                                        <Badge key={index} variant="outline" className="border-gray-600 bg-gray-800/30 text-gray-200 text-xs backdrop-blur-sm">
                                             {thema}
                                         </Badge>
                                     ))}
                                 </div>
                             </div>
-
-                            {/* <div className="w-full lg:w-1/3 mt-6 lg:mt-0">
-                <Card className="bg-gray-900 border border-gray-700 shadow-lg">
-                  <CardContent className="p-4 sm:p-6 relative overflow-hidden">
-                    // Subtiler Hintergrundeffekt
-                    <div className="absolute -top-20 -right-20 w-40 h-40 bg-blue-600 opacity-10 rounded-full blur-3xl"></div>
-                    <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-purple opacity-10 rounded-full blur-3xl"></div>
-
-                    <h3 className="font-semibold text-lg mb-4 text-white">Ihr Ansprechpartner</h3>
-
-                    <div className="flex flex-col items-center mb-5">
-                      <div className="relative mb-3">
-                        <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple rounded-full blur-md opacity-50 scale-110 animate-pulse-slow"></div>
-                        <Image
-                          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Daniela_team-cctVXd9eFjz9z72t0xDz9P1mnGR2JV.png"
-                          alt="Account Manager"
-                          width={100}
-                          height={100}
-                          className="rounded-full h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28 object-cover border-2 border-blue-600 relative z-10"
-                        />
-                      </div>
-                      <div className="text-center">
-                        <h3 className="font-medium text-white text-lg">Daniela Sentesch</h3>
-                        <p className="text-sm text-gray-400">{accountManager.position}</p>
-                      </div>
-                      <div className="mt-2 text-center">
-                        <p className="text-xs text-blue-300 italic">
-                          "Ich helfe Ihnen gerne, den perfekten Experten für Ihr Team zu finden."
-                        </p>
-                      </div>
-                    </div>
-
-                    <Separator className="my-4 bg-gray-700" />
-
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-3">
-                        <Mail className="h-4 w-4 text-blue-400" />
-                        <span className="text-sm text-gray-300">{accountManager.email}</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <Phone className="h-4 w-4 text-blue-400" />
-                        <span className="text-sm text-gray-300">{accountManager.phone}</span>
-                      </div>
-                    </div>
-
-                    <div className="mt-6 space-y-3">
-                      <Button className="w-full bg-purple hover:bg-purple/90 text-white group transition-all duration-300">
-                        <span className="group-hover:translate-x-1 transition-transform duration-300 inline-flex items-center">
-                          Experten zum Interview einladen
-                          <ArrowRight className="ml-2 h-4 w-4 opacity-70 group-hover:opacity-100 transition-opacity" />
-                        </span>
-                      </Button>
-                      <Button variant="outline" className="w-full border-gray-600 text-gray-300 hover:bg-gray-800">
-                        Vollständiges Profil anfordern
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div> */}
                         </div>
                     </div>
                 </div>
@@ -450,14 +398,14 @@ export function KandidatenProfile({
               </p>
             </div>} */}
 
-                        {!!kandidat.kurzprofil && <div className="bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 rounded-xl p-6 shadow-sm mb-10 relative overflow-hidden">
-                            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-blue-200 to-transparent opacity-50 -z-10"></div>
+                        {!!kandidat.kurzprofil && <div className="bg-gradient-to-r from-blue-50 via-indigo-50 to-blue-50 border border-blue-200 rounded-xl p-6 shadow-sm mb-10 relative overflow-hidden">
+                            <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-blue-200/20 to-transparent -z-10"></div>
                             <div className="flex flex-col md:flex-row gap-6 items-center">
                                 <div className="w-full md:w-1/4 flex justify-center">
                                     <div className="relative">
-                                        <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple rounded-full blur-md opacity-20 scale-110"></div>
-                                        <div className="w-32 h-32 rounded-full bg-gradient-to-r from-blue-100 to-blue-200 flex items-center justify-center relative z-10 border-2 border-white shadow-md">
-                                            <span className="text-4xl font-bold text-blue-600">{kandidat.name.charAt(0)}</span>
+                                        <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full blur-md opacity-20 scale-110"></div>
+                                        <div className="w-32 h-32 rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 flex items-center justify-center relative z-10 border-2 border-white shadow-lg">
+                                            <span className="text-4xl font-bold text-blue-700">{kandidat.name.charAt(0)}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -484,7 +432,7 @@ export function KandidatenProfile({
                                     </p>
                                     <div className="flex flex-wrap gap-2 mt-3 sm:mt-4">
                                         {kandidat.kernthemen.map((thema, index) => (
-                                            <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full shadow-sm border border-gray-200">
+                                            <div key={index} className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full shadow-sm border border-blue-200 hover:border-blue-300 transition-colors">
                                                 <svg
                                                     xmlns="http://www.w3.org/2000/svg"
                                                     width="16"
@@ -500,7 +448,7 @@ export function KandidatenProfile({
                                                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                                                     <polyline points="22 4 12 14.01 9 11.01"></polyline>
                                                 </svg>
-                                                <span className="text-sm text-gray-700"> {thema}</span>
+                                                <span className="text-sm text-gray-800 font-medium"> {thema}</span>
                                             </div>
                                         ))}
                                     </div>
@@ -558,11 +506,11 @@ export function KandidatenProfile({
                                 </CardContent>
                             </Card>
 
-                            <Card className="bg-white border border-gray-200 shadow-sm overflow-hidden">
-                                <div className="h-2 bg-gradient-to-r from-purple to-blue-600"></div>
+                            <Card className="bg-white border border-gray-200 shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+                                <div className="h-2 bg-gradient-to-r from-indigo-500 to-blue-600"></div>
                                 <CardContent className="p-6">
                                     <h3 className="text-heading-4 mb-6 text-gray-900 flex items-center">
-                                        <Briefcase className="h-5 w-5 text-blue-600 mr-2" />
+                                        <Briefcase className="h-5 w-5 text-indigo-600 mr-2" />
                                         Software-Kenntnisse
                                     </h3>
                                     <ul className="space-y-4">
@@ -570,38 +518,38 @@ export function KandidatenProfile({
                                             <li key={index} className="text-gray-700">
                                                 <div className="flex justify-between mb-2 items-center">
                                                     <div className="flex items-center">
-                                                        <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mr-3">
+                                                        <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center mr-3">
                                                             {software.name.includes("SAP") ? (
-                                                                <span className="font-bold text-xs text-blue-600">SAP</span>
+                                                                <span className="font-bold text-xs text-indigo-700">SAP</span>
                                                             ) : software.name.includes("Office") ? (
-                                                                <span className="font-bold text-xs text-blue-600">MS</span>
+                                                                <span className="font-bold text-xs text-indigo-700">MS</span>
                                                             ) : software.name.includes("CRM") ? (
-                                                                <span className="font-bold text-xs text-blue-600">CRM</span>
+                                                                <span className="font-bold text-xs text-indigo-700">CRM</span>
                                                             ) : (
-                                                                <span className="font-bold text-xs text-blue-600">RT</span>
+                                                                <span className="font-bold text-xs text-indigo-700">RT</span>
                                                             )}
                                                         </div>
-                                                        <span className="font-medium">{software.name}</span>
+                                                        <span className="font-medium text-gray-900">{software.name}</span>
                                                     </div>
-                                                    <span className="text-sm font-semibold text-blue-600">{software.level}%</span>
+                                                    <span className="text-sm font-semibold text-indigo-700">{software.level}%</span>
                                                 </div>
                                                 <Progress
-                                                    value={software.level}
+                                                    value={software.level || 0}
                                                     className="h-2 bg-gray-200"
                                                     indicatorClassName={`${software.level > 90
-                                                        ? "bg-green-600"
+                                                        ? "bg-emerald-600"
                                                         : software.level > 80
-                                                            ? "bg-blue-600"
+                                                            ? "bg-indigo-600"
                                                             : software.level > 70
-                                                                ? "bg-yellow-500"
+                                                                ? "bg-amber-500"
                                                                 : "bg-orange-500"
                                                         }`}
                                                 />
                                             </li>
                                         ))}
                                     </ul>
-                                    <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-100">
-                                        <p className="text-sm text-blue-800 italic">
+                                    <div className="mt-4 p-3 bg-indigo-50 rounded-lg border border-indigo-100">
+                                        <p className="text-sm text-indigo-800 italic">
                                             "Ich arbeite kontinuierlich daran, meine technischen Fähigkeiten zu erweitern und neue Tools zu
                                             erlernen."
                                         </p>
@@ -610,10 +558,10 @@ export function KandidatenProfile({
                             </Card>
 
                             <Card className="bg-white border border-gray-200 shadow-sm overflow-hidden">
-                                <div className="h-2 bg-gradient-to-r from-blue-600 to-green-500"></div>
+                                <div className="h-2 bg-gradient-to-r from-indigo-500 to-blue-600"></div>
                                 <CardContent className="p-6">
                                     <h3 className="text-heading-4 mb-6 text-gray-900 flex items-center">
-                                        <Languages className="h-5 w-5 text-blue-600 mr-2" />
+                                        <Languages className="h-5 w-5 text-indigo-600 mr-2" />
                                         Sprachkenntnisse
                                     </h3>
                                     <ul className="space-y-4">
@@ -621,18 +569,18 @@ export function KandidatenProfile({
                                             <li key={index} className="text-gray-700">
                                                 <div className="flex justify-between mb-2 items-center">
                                                     <div className="flex items-center">
-                                                        <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mr-3">
+                                                        <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center mr-3">
                                                             {sprache.sprache === "Deutsch" ? (
-                                                                <span className="font-bold text-xs text-blue-600">DE</span>
+                                                                <span className="font-bold text-xs text-indigo-700">DE</span>
                                                             ) : sprache.sprache === "Englisch" ? (
-                                                                <span className="font-bold text-xs text-blue-600">EN</span>
+                                                                <span className="font-bold text-xs text-indigo-700">EN</span>
                                                             ) : (
-                                                                <span className="font-bold text-xs text-blue-600">FR</span>
+                                                                <span className="font-bold text-xs text-indigo-700">FR</span>
                                                             )}
                                                         </div>
-                                                        <span className="font-medium">{sprache.sprache}</span>
+                                                        <span className="font-medium text-gray-900">{sprache.sprache}</span>
                                                     </div>
-                                                    <span className="text-sm text-gray-500 px-2 py-1 bg-gray-100 rounded-full">
+                                                    <span className="text-sm text-gray-600 px-2 py-1 bg-gray-100 rounded-full font-medium">
                                                         {sprache.niveau}
                                                     </span>
                                                 </div>
@@ -640,17 +588,17 @@ export function KandidatenProfile({
                                                     value={sprache.level}
                                                     className="h-2 bg-gray-200"
                                                     indicatorClassName={`${sprache.niveau === "Muttersprache"
-                                                        ? "bg-green-600"
+                                                        ? "bg-emerald-600"
                                                         : sprache.niveau === "Berufliche Kenntnisse"
-                                                            ? "bg-blue-600"
-                                                            : "bg-yellow-500"
+                                                            ? "bg-indigo-600"
+                                                            : "bg-amber-500"
                                                         }`}
                                                 />
                                             </li>
                                         ))}
                                     </ul>
-                                    <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-100">
-                                        <p className="text-sm text-blue-800 italic">
+                                    <div className="mt-4 p-3 bg-indigo-50 rounded-lg border border-indigo-100">
+                                        <p className="text-sm text-indigo-800 italic">
                                             "Ich kommuniziere fließend auf Deutsch und Englisch und arbeite gerne in internationalen Teams."
                                         </p>
                                     </div>
@@ -823,7 +771,7 @@ export function KandidatenProfile({
                                     <div className="space-y-4">
                                         <div className="flex flex-wrap gap-2 mb-4">
                                             {kandidat.kernthemen.map((thema, index) => (
-                                                <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full shadow-sm border border-gray-200">
+                                                <div key={index} className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full shadow-sm border border-gray-200 hover:border-indigo-300 transition-colors">
                                                     <svg
                                                         xmlns="http://www.w3.org/2000/svg"
                                                         width="16"
@@ -834,12 +782,12 @@ export function KandidatenProfile({
                                                         strokeWidth="2"
                                                         strokeLinecap="round"
                                                         strokeLinejoin="round"
-                                                        className="text-blue-600"
+                                                        className="text-indigo-600"
                                                     >
                                                         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                                                         <polyline points="22 4 12 14.01 9 11.01"></polyline>
                                                     </svg>
-                                                    <span className="text-sm text-gray-700"> {thema}</span>
+                                                    <span className="text-sm text-gray-800 font-medium"> {thema}</span>
                                                 </div>
                                             ))}
                                         </div>
@@ -922,12 +870,12 @@ export function KandidatenProfile({
                 </div>
             </section>
 
-            {/* Work Experience Section */}
-            <section id="erfahrung" className="py-14 bg-gray-50">
+            {/* Work Experience Section - Verbesserte Ästhetik */}
+            <section id="erfahrung" className="py-14 bg-gradient-to-b from-gray-50 to-white">
                 <div className="container mx-auto px-4">
                     <div className="max-w-6xl mx-auto">
                         <h2 className="text-heading-2 mb-4 text-gray-900 flex items-center">
-                            <Briefcase className="h-7 w-7 text-blue-600 mr-3" />
+                            <Briefcase className="h-7 w-7 text-indigo-600 mr-3" />
                             Berufserfahrung
                         </h2>
                         <p className="text-body-large text-gray-600 mb-10">Langjährige Expertise in verschiedenen Unternehmen</p>
@@ -937,12 +885,12 @@ export function KandidatenProfile({
                                 return (
                                     <Card
                                         key={index}
-                                        className="bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
+                                        className="bg-white border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden group"
                                     >
                                         <CardContent className="p-6 md:p-8 relative">
                                             {job.endDate === "Present" && (
                                                 <div className="absolute top-4 right-4">
-                                                    <Badge className="bg-gradient-to-r from-green-500 to-green-600 text-white font-medium px-3 py-1 shadow-sm">
+                                                    <Badge className="bg-gradient-to-r from-emerald-500 to-green-600 text-white font-medium px-3 py-1 shadow-md border border-emerald-400">
                                                         <div className="w-2 h-2 bg-white rounded-full mr-2 animate-pulse"></div>
                                                         Aktuelle Position
                                                     </Badge>
@@ -951,14 +899,14 @@ export function KandidatenProfile({
                                             <div className="flex flex-col justify-between gap-4 mb-6">
                                                 <div className="flex-1">
                                                     <h3 className="text-heading-3 mb-2 text-gray-900">{job.position}</h3>
-                                                    <p className="text-blue-700 font-medium text-lg mb-2">{job.name}</p>
-                                                    <p className="text-gray-700">{job.summary}</p>
+                                                    <p className="text-indigo-700 font-medium text-lg mb-2">{job.name}</p>
+                                                    <p className="text-gray-700 leading-relaxed">{job.summary}</p>
                                                 </div>
                                                 <div className="text-gray-500 text-sm">
                                                     {!!job?.startDate && !!job?.endDate && <span
-                                                        className={`inline-block px-4 py-2 rounded-full border ${!!job?.endDate && job.endDate === "Present"
-                                                            ? "bg-green-50 border-green-200 text-green-700 font-medium"
-                                                            : "bg-gray-50 border-gray-200"
+                                                        className={`inline-block px-4 py-2 rounded-full border font-medium ${!!job?.endDate && job.endDate === "Present"
+                                                            ? "bg-emerald-50 border-emerald-200 text-emerald-800"
+                                                            : "bg-gray-50 border-gray-200 text-gray-700"
                                                             }`}
                                                     >
                                                         {!!job?.startDate && new Date(job.startDate).toLocaleDateString("de-DE", { year: "numeric", month: "numeric" })} -
@@ -970,15 +918,21 @@ export function KandidatenProfile({
                                             </div>
                                             {job.achievements && job.achievements.length > 0 && (
                                                 <div
-                                                    className={`p-4 rounded-lg border ${job?.endDate && job.endDate === "Present" ? "bg-green-50 border-green-100" : "bg-blue-50 border-blue-100"
+                                                    className={`p-4 rounded-lg border ${job?.endDate && job.endDate === "Present" ? "bg-emerald-50 border-emerald-200" : "bg-indigo-50 border-indigo-200"
                                                         }`}
                                                 >
-                                                    <h4 className="font-semibold text-gray-900 mb-3">Erfolge & Verantwortlichkeiten:</h4>
+                                                    <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
+                                                        <CheckCircle
+                                                            className={`h-5 w-5 mr-2 ${job?.endDate && job.endDate === "Present" ? "text-emerald-600" : "text-indigo-600"
+                                                                }`}
+                                                        />
+                                                        Erfolge & Verantwortlichkeiten
+                                                    </h4>
                                                     <ul className="space-y-2">
                                                         {job.achievements.map((achievement, idx) => (
                                                             <li key={idx} className="flex items-start gap-3">
                                                                 <CheckCircle
-                                                                    className={`h-5 w-5 mt-1 flex-shrink-0 ${job?.endDate && job.endDate === "Present" ? "text-green-600" : "text-blue-600"
+                                                                    className={`h-5 w-5 mt-1 flex-shrink-0 ${job?.endDate && job.endDate === "Present" ? "text-emerald-600" : "text-indigo-600"
                                                                         }`}
                                                                 />
                                                                 <span className="text-gray-700">{achievement}</span>
@@ -996,30 +950,31 @@ export function KandidatenProfile({
                 </div>
             </section>
 
-            {/* Verfügbarkeit Section */}
-            <section className="py-10 bg-purple text-white">
-                <div className="container mx-auto px-4">
+            {/* Verfügbarkeit Section - Optimierte Farbpalette */}
+            <section className="py-10 bg-gradient-to-r from-indigo-600 to-blue-700 text-white relative overflow-hidden">
+                <div className="absolute inset-0 bg-black/10"></div>
+                <div className="container mx-auto px-4 relative z-10">
                     <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
                         <div>
                             <div className="flex items-center gap-2 mb-2">
-                                <Clock className="h-6 w-6" />
-                                <h2 className="text-heading-3">Verfügbarkeit</h2>
+                                <Clock className="h-6 w-6 text-blue-200" />
+                                <h2 className="text-heading-3 text-white">Verfügbarkeit</h2>
                             </div>
-                            <p className="text-body-large text-white/80">
-                                Kandidat verfügbar ab: <span className="font-semibold">{kandidat.verfuegbarkeit}</span>
+                            <p className="text-body-large text-blue-100">
+                                Kandidat verfügbar ab: <span className="font-semibold text-white">{kandidat.verfuegbarkeit}</span>
                             </p>
                             <div className="flex items-center gap-2 mt-2">
-                                <Badge className="bg-blue-500 text-white px-3 py-1 flex items-center gap-1">
-                                    <div className="w-2 h-2 bg-white rounded-full mr-1"></div>
+                                <Badge className="bg-blue-500 border-blue-400 text-white px-3 py-1 flex items-center gap-1">
+                                    <div className="w-2 h-2 bg-white rounded-full mr-1 animate-pulse"></div>
                                     Online verfügbar
                                 </Badge>
-                                <Badge className="bg-orange-500 text-black px-3 py-1">Premium Kandidat</Badge>
+                                <Badge className="bg-amber-500 border-amber-400 text-amber-900 px-3 py-1">Premium Kandidat</Badge>
                             </div>
                         </div>
                         <Button
                             onClick={handlePrint}
                             disabled={isPrinting}
-                            className="bg-white text-purple hover:bg-gray-50 font-medium px-6 py-3"
+                            className="bg-white text-indigo-700 hover:bg-gray-50 font-medium px-6 py-3 shadow-lg"
                         >
                             <Download className="mr-2 h-5 w-5" />
                             {isPrinting ? "Wird vorbereitet..." : "Profil als PDF drucken"}
@@ -1028,53 +983,58 @@ export function KandidatenProfile({
                 </div>
             </section>
 
-            {/* Footer mit Vertrauenselementen */}
-            <footer id="kontakt" className="py-12 bg-gray-900 text-white no-print-element">
-                <div className="container mx-auto px-4">
+            {/* Footer - Optimierte Kontraste */}
+            <footer id="kontakt" className="py-12 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white no-print-element relative overflow-hidden">
+                <div className="absolute inset-0 opacity-10">
+                    <div className="absolute top-0 left-0 w-96 h-96 bg-indigo-500 rounded-full blur-3xl"></div>
+                    <div className="absolute bottom-0 right-0 w-64 h-64 bg-blue-500 rounded-full blur-3xl"></div>
+                </div>
+                
+                <div className="container mx-auto px-4 relative z-10">
                     <div className="max-w-6xl mx-auto">
                         {/* Trust Indicators */}
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12 text-center">
                             <div className="flex flex-col items-center">
-                                <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mb-3">
+                                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center mb-3 shadow-lg">
                                     <Users className="h-6 w-6 text-white" />
                                 </div>
                                 <div className="text-2xl font-bold text-white mb-1">5.000+</div>
-                                <div className="text-gray-400 text-sm">Experten im Pool</div>
+                                <div className="text-gray-300 text-sm">Experten im Pool</div>
                                 <div className="flex mt-1">
                                     {[1, 2, 3, 4, 5].map((star) => (
-                                        <Star key={star} className="h-3 w-3 text-yellow-400 fill-yellow-400" />
+                                        <Star key={star} className="h-3 w-3 text-amber-400 fill-amber-400" />
                                     ))}
                                 </div>
                             </div>
                             <div className="flex flex-col items-center">
-                                <div className="w-12 h-12 bg-yellow-500 rounded-full flex items-center justify-center mb-3">
+                                <div className="w-12 h-12 bg-gradient-to-br from-amber-500 to-orange-600 rounded-full flex items-center justify-center mb-3 shadow-lg">
                                     <Star className="h-6 w-6 text-white" />
                                 </div>
                                 <div className="text-2xl font-bold text-white mb-1">4.8/5</div>
-                                <div className="text-gray-400 text-sm">Kundenbewertung</div>
+                                <div className="text-gray-300 text-sm">Kundenbewertung</div>
                                 <div className="flex mt-1">
                                     {[1, 2, 3, 4, 5].map((star) => (
-                                        <Star key={star} className="h-3 w-3 text-yellow-400 fill-yellow-400" />
+                                        <Star key={star} className="h-3 w-3 text-amber-400 fill-amber-400" />
                                     ))}
                                 </div>
                             </div>
                             <div className="flex flex-col items-center">
-                                <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mb-3">
+                                <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-green-600 rounded-full flex items-center justify-center mb-3 shadow-lg">
                                     <Shield className="h-6 w-6 text-white" />
                                 </div>
                                 <div className="text-2xl font-bold text-white mb-1">100%</div>
-                                <div className="text-gray-400 text-sm">DSGVO-konform</div>
+                                <div className="text-gray-300 text-sm">DSGVO-konform</div>
                             </div>
                             <div className="flex flex-col items-center">
-                                <div className="w-12 h-12 bg-purple rounded-full flex items-center justify-center mb-3">
+                                <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple rounded-full flex items-center justify-center mb-3 shadow-lg">
                                     <Clock className="h-6 w-6 text-white" />
                                 </div>
                                 <div className="text-2xl font-bold text-white mb-1">seit 2020</div>
-                                <div className="text-gray-400 text-sm">Marktführer</div>
+                                <div className="text-gray-300 text-sm">Marktführer</div>
                             </div>
                         </div>
 
-                        <Separator className="bg-gray-800 mb-8" />
+                        <Separator className="bg-gray-700 mb-8" />
 
                         <div className="flex flex-col md:flex-row justify-between items-start mb-8 gap-8">
                             <div className="max-w-md">
@@ -1085,7 +1045,7 @@ export function KandidatenProfile({
                                     height={30}
                                     className="h-6 w-auto mb-4"
                                 />
-                                <p className="text-gray-400 leading-relaxed mb-4">
+                                <p className="text-gray-300 leading-relaxed mb-4">
                                     Spezialisiert auf die Vermittlung hochqualifizierter IT-Experten und Führungskräfte für anspruchsvolle
                                     Projekte. Vertrauen Sie auf unsere Expertise und unser umfangreiches Netzwerk.
                                 </p>
@@ -1093,59 +1053,59 @@ export function KandidatenProfile({
                                 <div className="flex items-center gap-2 mb-3">
                                     <div className="flex">
                                         {[1, 2, 3, 4, 5].map((star) => (
-                                            <Star key={star} className="h-4 w-4 text-yellow-400 fill-yellow-400" />
+                                            <Star key={star} className="h-4 w-4 text-amber-400 fill-amber-400" />
                                         ))}
                                     </div>
-                                    <span className="text-sm text-gray-400">4.8/5 Sterne</span>
+                                    <span className="text-sm text-gray-300">4.8/5 Sterne</span>
                                 </div>
                                 <p className="text-sm text-gray-400">Über 50 Partner setzen seit 2020 auf unsere Expertise</p>
                             </div>
 
                             <div>
                                 <h3 className="font-semibold mb-4 text-white">Kontakt</h3>
-                                <address className="not-italic text-gray-400 space-y-2">
+                                <address className="not-italic text-gray-300 space-y-2">
                                     <p className="flex items-center gap-2">
-                                        <MapPin className="h-4 w-4 text-blue-400" />
+                                        <MapPin className="h-4 w-4 text-indigo-400" />
                                         Rudolfplatz 3, 50674 Köln
                                     </p>
                                     <p className="flex items-center gap-2">
-                                        <Phone className="h-4 w-4 text-blue-400" />
+                                        <Phone className="h-4 w-4 text-indigo-400" />
                                         +49 2111 7607 313
                                     </p>
                                     <p className="flex items-center gap-2">
-                                        <Mail className="h-4 w-4 text-blue-400" />
+                                        <Mail className="h-4 w-4 text-indigo-400" />
                                         kontakt@getexperts.io
                                     </p>
-                                    <p className="text-blue-400 hover:text-blue-300 transition-colors">www.getexperts.io</p>
+                                    <p className="text-indigo-300 hover:text-indigo-200 transition-colors cursor-pointer">www.getexperts.io</p>
                                 </address>
                             </div>
 
                             <div>
                                 <h3 className="font-semibold mb-4 text-white">Zertifizierungen & Auszeichnungen</h3>
-                                <div className="space-y-2 text-gray-400 mb-4">
+                                <div className="space-y-2 text-gray-300 mb-4">
                                     <p className="flex items-center gap-2">
-                                        <Shield className="h-4 w-4 text-blue-400" />
+                                        <Shield className="h-4 w-4 text-emerald-400" />
                                         ISO 27001 zertifiziert
                                     </p>
                                     <p className="flex items-center gap-2">
-                                        <CheckCircle className="h-4 w-4 text-blue-400" />
+                                        <CheckCircle className="h-4 w-4 text-emerald-400" />
                                         DSGVO-konform
                                     </p>
                                     <p className="flex items-center gap-2">
-                                        <Award className="h-4 w-4 text-yellow-400" />
+                                        <Award className="h-4 w-4 text-amber-400" />
                                         Top Employer 2024
                                     </p>
                                 </div>
                             </div>
                         </div>
 
-                        <Separator className="bg-gray-800 mb-6" />
+                        <Separator className="bg-gray-700 mb-6" />
 
                         <div className="flex flex-col md:flex-row justify-between items-center">
-                            <div className="text-gray-500 text-sm mb-4 md:mb-0">
+                            <div className="text-gray-400 text-sm mb-4 md:mb-0">
                                 © {new Date().getFullYear()} getexperts GmbH. Alle Rechte vorbehalten.
                             </div>
-                            <div className="flex gap-6 text-gray-500 text-sm">
+                            <div className="flex gap-6 text-gray-400 text-sm">
                                 <a href="#" className="hover:text-white transition-colors">
                                     Datenschutz
                                 </a>
@@ -1184,44 +1144,40 @@ export function KandidatenProfile({
                 <ChevronRight className="h-5 w-5 rotate-[-90deg]" />
             </a>
 
-            {/* Sticky Bottom Bar für Terminvereinbarung */}
+            {/* Sticky Bottom Bar - Verbesserte Kontraste */}
             <div
-                className="fixed bottom-0 left-0 right-0 z-20 border-t border-blue-800 no-print-element"
-                style={{
-                    backgroundColor: "#0a2e65",
-                    boxShadow: "0 -10px 30px rgba(0, 0, 0, 0.15)",
-                }}
+                className="fixed bottom-0 left-0 right-0 z-20 border-t border-indigo-200 no-print-element bg-gradient-to-r from-indigo-700 to-blue-800 shadow-2xl"
             >
                 <div className="container mx-auto px-4 py-3 sm:py-5">
                     <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
                         <div className="flex items-center gap-3 sm:gap-4">
-                            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-blue-700 rounded-full flex items-center justify-center shadow-md">
+                            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full flex items-center justify-center shadow-lg">
                                 <Calendar className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
                             </div>
                             <div>
                                 <h3 className="font-semibold text-white text-base sm:text-lg tracking-tight">
                                     Exklusives Gespräch vereinbaren
                                 </h3>
-                                <p className="text-white text-xs sm:text-sm">
+                                <p className="text-blue-100 text-xs sm:text-sm">
                                     Sichern Sie sich einen persönlichen Termin in nur 1 Minute
                                 </p>
-                                <p className="text-white text-xs mt-1 hidden sm:block">
+                                <p className="text-blue-200 text-xs mt-1 hidden sm:block">
                                     Unverbindliches Kennenlernen • 100% erfolgsbasiert
                                 </p>
                             </div>
                         </div>
                         <div className="flex flex-col items-end gap-2 w-full sm:w-auto mt-2 sm:mt-0">
                             <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
-                                <div className="hidden sm:flex items-center gap-2 text-white bg-blue-800/40 px-3 py-1.5 rounded-full text-sm">
+                                <div className="hidden sm:flex items-center gap-2 text-white bg-blue-600/50 px-3 py-1.5 rounded-full text-sm backdrop-blur-sm">
                                     <Clock className="h-4 w-4" />
                                     <span>Sofort verfügbar</span>
                                 </div>
-                                <Button className="bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-white font-medium px-4 sm:px-6 py-2 sm:py-2.5 shadow-lg border border-yellow-300/20 transition-all duration-200 w-full sm:w-auto">
+                                <Button className="bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-amber-500 hover:to-yellow-600 text-amber-900 font-medium px-4 sm:px-6 py-2 sm:py-2.5 shadow-lg border border-amber-300/20 transition-all duration-200 w-full sm:w-auto">
                                     <Calendar className="mr-2 h-4 w-4" />
                                     Termin vorschlagen
                                 </Button>
                             </div>
-                            <p className="text-white text-xs italic hidden sm:block">
+                            <p className="text-blue-200 text-xs italic hidden sm:block">
                                 Wir rechnen ausschließlich im Erfolgsfall nach Vertragsunterzeichnung ab.
                             </p>
                         </div>

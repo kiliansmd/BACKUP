@@ -28,7 +28,7 @@ export default function Home() {
         throw new Error(errorData.error || 'Failed to parse resume');
       }
 
-      const parsedData = await res.json();
+      await res.json();
       
       // Navigate to resumes page after successful upload
       router.push('/resumes');
