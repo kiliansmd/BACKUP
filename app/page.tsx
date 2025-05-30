@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, Suspense } from 'react';
+import { useState } from 'react';
 import { FileUpload } from '@/components/FileUpload';
 import { ResumeListWrapper } from '@/components/ResumeListWrapper';
 import { ResumeSearchWrapper } from '@/components/ResumeSearchWrapper';
@@ -27,7 +27,6 @@ export default function Home() {
       <header className="bg-black border-b border-gray-800 shadow-sm">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            {/* Logo Section */}
             <div className="flex items-center gap-3">
               <Image 
                 src="/logo-white.png" 
@@ -38,7 +37,6 @@ export default function Home() {
               />
             </div>
 
-            {/* Status */}
             <div className="flex items-center gap-2 bg-emerald-500/20 text-emerald-300 px-3 py-1.5 rounded-lg text-sm">
               <div className="w-2 h-2 bg-emerald-400 rounded-full"></div>
               <span>DSGVO-konform</span>
@@ -202,6 +200,7 @@ export default function Home() {
                 alt="Company Logo" 
                 width={214} 
                 height={32} 
+                className="object-contain"
               />
             </div>
             <div className="text-sm text-gray-400">

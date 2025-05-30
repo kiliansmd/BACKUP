@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
+import Image from 'next/image';
 import { KandidatenProfile } from '@/components/kandidaten-profile';
 import { ResumeSkeleton } from '@/components/ui/resume-skeleton';
 import { BreadcrumbNav } from '@/components/ui/breadcrumb-nav';
@@ -315,7 +316,6 @@ export default function CandidateDetailsPage() {
     };
   };
 
-  // Helper function to convert Kandidat back to ParsedResume format for compatibility
   const mapKandidatToResume = (kandidat: any): ParsedResume => {
     return {
       name: kandidat.name,
@@ -450,7 +450,24 @@ export default function CandidateDetailsPage() {
   const navSections = generateNavSections(resumeData);
 
   return (
-    <>
+    <div className="min-h-screen bg-white">
+      {/* Secure Link Header */}
+      <div className="bg-black border-b border-gray-800 text-white p-4">
+        <div className="container mx-auto">
+          <div className="flex items-center gap-3">
+            <div className="w-auto flex items-center justify-center">
+              <Image 
+                src="/logo-white.png" 
+                alt="Company Logo" 
+                width={214} 
+                height={32} 
+                className="object-contain"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
       <BreadcrumbNav items={[
         { label: 'Kandidaten', href: '/resumes' },
         { label: generateAnonymousCandidateName(kandidat.name) }
@@ -475,6 +492,6 @@ export default function CandidateDetailsPage() {
           className="print:hidden"
         />
       )}
-    </>
+    </div>
   );
-} 
+}
