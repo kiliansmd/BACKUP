@@ -16,7 +16,6 @@ export default function Home() {
 
   const handleUploadSuccess = (data: any) => {
     setUploadedCount(prev => prev + 1);
-    // Automatically switch to candidates view after successful upload
     setTimeout(() => {
       setActiveTab('candidates');
     }, 2000);
@@ -25,7 +24,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Clean Navigation Header */}
-      <header className="bg-gray-900 border-b border-gray-800 shadow-sm">
+      <header className="bg-black border-b border-gray-800 shadow-sm">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             {/* Logo Section */}
@@ -194,7 +193,7 @@ export default function Home() {
       </main>
 
       {/* Simple Footer */}
-      <footer className="mt-16 bg-gray-900 text-white border-t border-gray-800">
+      <footer className="mt-16 bg-black text-white border-t border-gray-800">
         <div className="container mx-auto px-6 py-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
