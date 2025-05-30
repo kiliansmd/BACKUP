@@ -2,6 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { db, isFirebaseMockMode } from '@/lib/firebase-admin';
 import { Timestamp } from 'firebase-admin/firestore';
 
+// Konfiguration für die Route
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
 // Mock Parser für Development
 const mockResumeParser = async () => {
   await new Promise(resolve => setTimeout(resolve, 1000));
@@ -23,6 +30,18 @@ const mockResumeParser = async () => {
   };
 };
 
+// CORS Headers
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+};
+
+// OPTIONS handler für CORS preflight requests
+export async function OPTIONS() {
+  return NextResponse.json({}, { headers: corsHeaders });
+}
+
 export async function POST(request: NextRequest) {
   try {
     // Parse multipart form data
@@ -32,7 +51,7 @@ export async function POST(request: NextRequest) {
     if (!file) {
       return NextResponse.json(
         { error: 'Keine Datei hochgeladen' },
-        { status: 400 }
+        { status: 400, headers: corsHeaders }
       );
     }
 
@@ -41,7 +60,7 @@ export async function POST(request: NextRequest) {
     if (file.size > maxSize) {
       return NextResponse.json(
         { error: 'Datei ist zu groß (max. 10MB)' },
-        { status: 413 }
+        { status: 413, headers: corsHeaders }
       );
     }
 
@@ -94,7 +113,7 @@ export async function POST(request: NextRequest) {
         id: resumeId,
         message: 'Lebenslauf erfolgreich verarbeitet'
       }
-    });
+    }, { headers: corsHeaders });
 
   } catch (error) {
     console.error('Parse resume error:', error);
@@ -103,7 +122,7 @@ export async function POST(request: NextRequest) {
         error: 'Fehler beim Verarbeiten des Lebenslaufs',
         success: false 
       },
-      { status: 500 }
+      { status: 500, headers: corsHeaders }
     );
   }
 }

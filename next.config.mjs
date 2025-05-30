@@ -28,6 +28,14 @@ const nextConfig = {
       }
     ]
   },
+
+  // API-Konfiguration
+  api: {
+    bodyParser: {
+      sizeLimit: '10mb',
+    },
+    responseLimit: '10mb',
+  },
   
   // Strikte Typenprüfung in Produktion
   typescript: {
@@ -58,6 +66,21 @@ const nextConfig = {
       maxAssetSize: 512000,
     }
     return config
+  },
+
+  // Headers für CORS und Sicherheit
+  async headers() {
+    return [
+      {
+        source: '/api/:path*',
+        headers: [
+          { key: 'Access-Control-Allow-Credentials', value: 'true' },
+          { key: 'Access-Control-Allow-Origin', value: '*' },
+          { key: 'Access-Control-Allow-Methods', value: 'GET,POST,PUT,DELETE,OPTIONS' },
+          { key: 'Access-Control-Allow-Headers', value: 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization' },
+        ],
+      },
+    ]
   }
 }
 
