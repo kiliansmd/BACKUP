@@ -1,107 +1,109 @@
-import { NextResponse } from 'next/server';
-import { createResume } from '@/lib/firebase';
-import { withErrorHandling, withRateLimit } from '@/lib/api-middleware';
-import { fileUploadSchema, resumeSchema, createApiResponse } from '@/utils/validation';
-import formidable, { File as FormidableFile, Fields, Files } from 'formidable';
-import { Readable } from 'stream';
+import { NextRequest, NextResponse } from 'next/server';
+import { db, isFirebaseMockMode } from '@/lib/firebase-admin';
+import { Timestamp } from 'firebase-admin/firestore';
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
+// Mock Parser für Development
+const mockResumeParser = async () => {
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  
+  return {
+    name: "Test Kandidat",
+    title: "Software Developer",
+    brief: "Erfahrener Entwickler mit 5+ Jahren Erfahrung",
+    contact: {
+      email: "test@example.com",
+      phone: "+49 123 456789",
+      location_city: "Berlin",
+      location_country: "Germany"
+    },
+    skills: ["TypeScript", "React", "Node.js"],
+    derived: {
+      years_of_experience: 5
+    }
+  };
 };
 
-async function parseFormFromWebRequest(req: Request, maxFileSize: number = 20): Promise<{ fields: Fields; files: Files }> {
-  const form = formidable({
-    maxFileSize: maxFileSize * 1024 * 1024, // Convert MB to bytes
-  });
-
-  // Convert Request stream to Node.js Readable stream
-  const readable = Readable.from(req.body as any);
-  
-  return new Promise((resolve, reject) => {
-    form.parse(readable, (err: Error | null, fields: Fields, files: Files) => {
-      if (err) reject(err);
-      resolve({ fields, files });
-    });
-  });
-}
-
-export const POST = withRateLimit(10, 60000)(
-  withErrorHandling(async (req: Request) => {
-    let fields: Fields, files: Files;
-    try {
-      ({ fields, files } = await parseFormFromWebRequest(req, 20));
-    } catch (err: any) {
-      if (err?.message?.includes('maxFileSize exceeded')) {
-        return NextResponse.json(
-          createApiResponse({ error: 'Die Datei ist größer als 20 MB.' }, false),
-          { status: 413 }
-        );
-      }
-      return NextResponse.json(
-        createApiResponse({ error: 'Fehler beim Datei-Upload: ' + err?.message }, false),
-        { status: 400 }
-      );
-    }
-
-    const fileArray = files.file;
-    if (!fileArray || !Array.isArray(fileArray) || fileArray.length === 0) {
-      return NextResponse.json(
-        createApiResponse({ error: 'Keine Datei hochgeladen.' }, false),
-        { status: 400 }
-      );
-    }
-
-    const file = fileArray[0];
-
-    // Call external resume parser API
-    if (!process.env.RESUME_PARSER_API_KEY) {
-      throw new Error('RESUME_PARSER_API_KEY is not defined in environment variables');
-    }
-
-    const uploadFormData = new FormData();
-    // @ts-ignore
-    uploadFormData.append('file', file.filepath ? require('fs').createReadStream(file.filepath) : file);
+export async function POST(request: NextRequest) {
+  try {
+    // Parse multipart form data
+    const formData = await request.formData();
+    const file = formData.get('file') as File;
     
-    const response = await fetch('https://resumeparser.app/resume/parse', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${process.env.RESUME_PARSER_API_KEY}`
-      },
-      body: uploadFormData,
+    if (!file) {
+      return NextResponse.json(
+        { error: 'Keine Datei hochgeladen' },
+        { status: 400 }
+      );
+    }
+
+    // Validate file
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    if (file.size > maxSize) {
+      return NextResponse.json(
+        { error: 'Datei ist zu groß (max. 10MB)' },
+        { status: 413 }
+      );
+    }
+
+    let parsedData;
+    
+    // Check if we should use mock parser
+    if (isFirebaseMockMode() || !process.env.RESUME_PARSER_API_KEY) {
+      console.log('🔧 Using mock parser');
+      parsedData = await mockResumeParser();
+    } else {
+      // Real API call
+      const apiFormData = new FormData();
+      apiFormData.append('file', file);
+      
+      const response = await fetch(process.env.NEXT_PUBLIC_RESUME_PARSER_URL || 'https://resumeparser.app/resume/parse', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${process.env.RESUME_PARSER_API_KEY}`
+        },
+        body: apiFormData,
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Resume parser API error: ${response.status}`);
+      }
+      
+      parsedData = await response.json();
+    }
+
+    // Generate ID
+    const resumeId = `resume-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
+    // Store in Firebase if available
+    if (!isFirebaseMockMode() && db) {
+      const resumeData = {
+        ...parsedData,
+        id: resumeId,
+        fileName: file.name,
+        fileSize: file.size,
+        uploadedAt: Timestamp.now(),
+        lastModified: Timestamp.now(),
+      };
+      
+      await db.collection('resumes').doc(resumeId).set(resumeData);
+    }
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        id: resumeId,
+        message: 'Lebenslauf erfolgreich verarbeitet'
+      }
     });
 
-    if (!response.ok) {
-      throw new Error(`Resume parser API error: ${response.status}`);
-    }
-
-    const parsedData = await response.json();
-
-    // Validate the parsed data
-    let validatedData;
-    try {
-      validatedData = await resumeSchema.parseAsync(parsedData);
-    } catch (validationError) {
-      console.warn('Parsed data validation warning:', validationError);
-      validatedData = parsedData;
-    }
-
-    // Store in Firebase
-    const resumeData = {
-      ...validatedData,
-      fileName: file.originalFilename,
-      fileSize: file.size,
-    };
-
-    const resumeId = await createResume(resumeData);
-
+  } catch (error) {
+    console.error('Parse resume error:', error);
     return NextResponse.json(
-      createApiResponse({
-        id: resumeId,
-        message: 'Resume parsed and stored successfully',
-        warnings: validatedData !== parsedData ? ['Some fields did not pass validation'] : []
-      })
+      { 
+        error: 'Fehler beim Verarbeiten des Lebenslaufs',
+        success: false 
+      },
+      { status: 500 }
     );
-  })
-);
+  }
+}

@@ -2,7 +2,6 @@
   "version": 2,
   "buildCommand": "npm run build",
   "outputDirectory": ".next",
-  "installCommand": "npm install",
   "framework": "nextjs",
   "regions": ["fra1"],
   "env": {
@@ -10,7 +9,8 @@
     "FIREBASE_CLIENT_EMAIL": "@firebase-client-email",
     "FIREBASE_PRIVATE_KEY": "@firebase-private-key",
     "NEXT_PUBLIC_RESUME_PARSER_API": "@resume-parser-api-key",
-    "NEXT_PUBLIC_RESUME_PARSER_URL": "@resume-parser-url"
+    "NEXT_PUBLIC_RESUME_PARSER_URL": "@resume-parser-url",
+    "NODE_ENV": "production"
   },
   "build": {
     "env": {
@@ -22,13 +22,25 @@
     }
   },
   "functions": {
+    "app/api/parse-resume/route.ts": {
+      "maxDuration": 30,
+      "memory": 1024,
+      "runtime": "nodejs20.x"
+    },
+    "app/api/get-resumes/route.ts": {
+      "maxDuration": 10,
+      "memory": 1024,
+      "runtime": "nodejs20.x"
+    },
+    "app/api/resume/[id]/route.ts": {
+      "maxDuration": 10,
+      "memory": 1024,
+      "runtime": "nodejs20.x"
+    },
     "app/api/export-profile/route.ts": {
       "maxDuration": 30,
-      "memory": 1024
-    },
-    "app/api/parse-resume/route.ts": {
-      "maxDuration": 15,
-      "memory": 1024
+      "memory": 1024,
+      "runtime": "nodejs20.x"
     }
   },
   "headers": [
