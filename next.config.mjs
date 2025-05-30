@@ -15,20 +15,6 @@ const nextConfig = {
     ],
   },
   
-  // API-Routen Konfiguration
-  async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: '/api/:path*',
-      },
-      {
-        source: '/resume-parser/:path*',
-        destination: process.env.NEXT_PUBLIC_RESUME_PARSER_URL + '/:path*',
-      }
-    ]
-  },
-
   // API-Konfiguration
   api: {
     bodyParser: {
