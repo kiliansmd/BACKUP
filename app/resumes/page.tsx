@@ -3,7 +3,7 @@
 import { ResumeSearchWrapper } from '@/components/ResumeSearchWrapper';
 import { ResumeListWrapper } from '@/components/ResumeListWrapper';
 import { Skeleton } from '@/components/ui/skeleton';
-import { FileText, Sparkles, Users, TrendingUp, Clock, Search, Filter, Brain, Shield } from 'lucide-react';
+import { FileText, Sparkles, Users, TrendingUp, Clock, Search, Filter, Brain, Shield, Calendar, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
@@ -41,6 +41,50 @@ export default function ResumesPage() {
         
         <div className="container mx-auto px-4 py-6">
           <div className="max-w-7xl mx-auto space-y-6">
+            <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-3xl p-12 shadow-2xl border border-gray-700/20">
+              <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
+                <div className="space-y-6 lg:max-w-2xl">
+                  <h2 className="text-4xl font-bold text-white">
+                    Vereinbaren Sie ein Kennenlernen
+                  </h2>
+                  <p className="text-xl text-gray-300 leading-relaxed">
+                    Entdecken Sie, wie unsere Experten Ihr Team optimal ergänzen können. Wir finden gemeinsam die perfekte Lösung für Ihre Anforderungen.
+                  </p>
+                  <div className="flex flex-wrap gap-4">
+                    <Button 
+                      onClick={() => window.location.href = 'mailto:kontakt@getexperts.de'}
+                      className="bg-white hover:bg-gray-100 text-gray-900 px-6 py-3 rounded-xl text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2"
+                    >
+                      <Calendar className="h-5 w-5" />
+                      Termin vereinbaren
+                      <ArrowRight className="h-5 w-5 ml-2" />
+                    </Button>
+                    <Button 
+                      onClick={() => window.location.href = 'tel:+4921117607313'}
+                      variant="outline"
+                      className="border-2 border-white/20 text-white hover:bg-white/10 px-6 py-3 rounded-xl text-lg font-semibold transition-all duration-300"
+                    >
+                      Jetzt anrufen
+                    </Button>
+                  </div>
+                </div>
+                <div className="flex flex-col items-center gap-4 lg:text-right">
+                  <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                    <Clock className="h-5 w-5 text-green-400" />
+                    <span className="text-white font-medium">Schnelle Reaktionszeit</span>
+                  </div>
+                  <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                    <Users className="h-5 w-5 text-blue-400" />
+                    <span className="text-white font-medium">Persönliche Beratung</span>
+                  </div>
+                  <div className="flex items-center gap-3 bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
+                    <Shield className="h-5 w-5 text-yellow-400" />
+                    <span className="text-white font-medium">DSGVO-konform</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-3xl p-12 shadow-2xl border border-gray-700/20">
               <div className="text-center space-y-8">
                 <div className="flex items-center justify-center gap-4 mb-6">
