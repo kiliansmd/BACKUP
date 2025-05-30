@@ -32,9 +32,11 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  
+
   // Experimentelle Funktionen für bessere Performance
-  serverExternalPackages: ['@vercel/kv']
+  experimental: {
+    ppr: false
+  }
 }
 
 export default nextConfig

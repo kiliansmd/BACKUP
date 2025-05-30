@@ -1,18 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { FileUpload } from '@/components/FileUpload';
 import { ResumeListWrapper } from '@/components/ResumeListWrapper';
 import { ResumeSearchWrapper } from '@/components/ResumeSearchWrapper';
-import { useRouter } from 'next/navigation';
-import { Upload, Users, Brain, Shield, Sparkles, TrendingUp, Search, FileText, Clock, CheckCircle, Star, Zap, Award } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Upload, Users, Shield, Search, FileText, CheckCircle } from 'lucide-react';
 import Image from 'next/image';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<'upload' | 'candidates'>('upload');
   const [uploadedCount, setUploadedCount] = useState(0);
-  const router = useRouter();
 
   const handleUploadSuccess = (data: any) => {
     setUploadedCount(prev => prev + 1);

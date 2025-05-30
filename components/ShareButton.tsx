@@ -1,9 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Share2, Copy, Clock, Eye, Check, Settings, X, Calendar, Users } from 'lucide-react';
+import { Share2, Copy, Clock, Eye, Check, Settings, X, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 
 interface ShareButtonProps {
@@ -23,7 +22,7 @@ export function ShareButton({ candidateId, candidateName, className = '' }: Shar
   const [shareUrl, setShareUrl] = useState<string | null>(null);
   const [shareData, setShareData] = useState<any>(null);
   const [options, setOptions] = useState<ShareLinkOptions>({
-    expirationHours: 72,
+    expirationHours: 168, // 7 Tage Standard
     maxAccess: undefined
   });
   const { toast } = useToast();
@@ -34,7 +33,7 @@ export function ShareButton({ candidateId, candidateName, className = '' }: Shar
     setShareUrl(null);
     setShareData(null);
     setOptions({
-      expirationHours: 72,
+      expirationHours: 168, // 7 Tage Standard
       maxAccess: undefined
     });
   };
@@ -130,8 +129,8 @@ export function ShareButton({ candidateId, candidateName, className = '' }: Shar
   const presetOptions = [
     { label: '1 Stunde', hours: 1, icon: Clock },
     { label: '24 Stunden', hours: 24, icon: Calendar },
-    { label: '3 Tage', hours: 72, icon: Calendar },
-    { label: '1 Woche', hours: 168, icon: Calendar },
+    { label: '7 Tage', hours: 168, icon: Calendar },
+    { label: '30 Tage', hours: 720, icon: Calendar },
   ];
 
   if (isOpen) {

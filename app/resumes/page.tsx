@@ -2,14 +2,11 @@
 
 import { ResumeSearchWrapper } from '@/components/ResumeSearchWrapper';
 import { ResumeListWrapper } from '@/components/ResumeListWrapper';
-import { Skeleton } from '@/components/ui/skeleton';
-import { FileText, Sparkles, Users, TrendingUp, Clock, Search, Filter, Brain, Shield, Calendar, ArrowRight } from 'lucide-react';
+import { FileText, Sparkles, Users, TrendingUp, Clock, Search, Filter, Shield, Calendar, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 export default function ResumesPage() {
-  const router = useRouter();
 
   return (
     <>

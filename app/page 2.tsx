@@ -101,7 +101,7 @@ export default function Home() {
                   <div className="w-16 h-16 bg-blue/10 rounded-2xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform duration-300">
                     <Clock className="h-8 w-8 text-blue" />
                   </div>
-                  <h3 className="text-3xl font-bold text-gray-950">< 30s</h3>
+                  <h3 className="text-3xl font-bold text-gray-950">&lt; 30s</h3>
                   <p className="text-lg text-gray-950 font-medium">Analyse-Zeit</p>
                   <p className="text-sm text-gray-950">Durchschnittliche Verarbeitung</p>
                 </div>

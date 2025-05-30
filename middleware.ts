@@ -3,6 +3,7 @@ import type { NextRequest } from 'next/server'
 
 // Basic middleware that just continues the request
 export function middleware(request: NextRequest) {
+  // Hier können Sie Middleware-Logik hinzufügen
   return NextResponse.next()
 }
 

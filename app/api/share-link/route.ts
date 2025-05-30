@@ -1,9 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createHash, randomBytes } from 'crypto';
-import { appConfig } from '@/config/app.config';
+import { randomBytes } from 'crypto';
 
-// In-memory storage für Development (für Production: Redis/Database)
-const shareLinks = new Map<string, {
+// Vercel KV für persistente Speicherung (mit Fallback für Development)
+let kv: any = null;
+
+async function getKV() {
+  if (kv) return kv;
+  
+  try {
+    const { kv: vercelKV } = await import('@vercel/kv');
+    kv = vercelKV;
+    return kv;
+  } catch (error) {
+    console.warn('⚠️ Vercel KV nicht verfügbar, verwende In-Memory Storage für Development');
+    return null;
+  }
+}
+
+// Fallback In-Memory Storage für Development
+const memoryStorage = new Map<string, {
   candidateId: string;
   expiresAt: number;
   createdAt: number;
@@ -29,7 +44,7 @@ interface CreateShareLinkRequest {
 export async function POST(request: NextRequest) {
   try {
     const body: CreateShareLinkRequest = await request.json();
-    const { candidateId, expirationHours = 72, maxAccess, metadata } = body;
+    const { candidateId, expirationHours = 168, maxAccess, metadata } = body; // 7 Tage Standard
 
     if (!candidateId) {
       return NextResponse.json(
@@ -42,8 +57,7 @@ export async function POST(request: NextRequest) {
     const token = randomBytes(32).toString('hex');
     const expiresAt = Date.now() + (expirationHours * 60 * 60 * 1000);
     
-    // Store link data
-    shareLinks.set(token, {
+    const linkData = {
       candidateId,
       expiresAt,
       createdAt: Date.now(),
@@ -53,7 +67,18 @@ export async function POST(request: NextRequest) {
         ...metadata,
         ipAddress: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown'
       }
-    });
+    };
+
+    // Store link data
+    const kvClient = await getKV();
+    if (kvClient) {
+      // Production: Vercel KV mit automatischem TTL
+      const ttlSeconds = Math.floor(expirationHours * 60 * 60);
+      await kvClient.setex(`share:${token}`, ttlSeconds, JSON.stringify(linkData));
+    } else {
+      // Development: In-Memory Storage
+      memoryStorage.set(token, linkData);
+    }
 
     // Generate shareable URL
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
@@ -95,7 +120,18 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const linkData = shareLinks.get(token);
+    // Get link data
+    const kvClient = await getKV();
+    let linkData = null;
+
+    if (kvClient) {
+      // Production: Vercel KV
+      const data = await kvClient.get(`share:${token}`);
+      linkData = data ? (typeof data === 'string' ? JSON.parse(data) : data) : null;
+    } else {
+      // Development: In-Memory Storage
+      linkData = memoryStorage.get(token);
+    }
     
     if (!linkData) {
       return NextResponse.json(
@@ -106,7 +142,11 @@ export async function GET(request: NextRequest) {
 
     // Check expiration
     if (Date.now() > linkData.expiresAt) {
-      shareLinks.delete(token);
+      if (kvClient) {
+        await kvClient.del(`share:${token}`);
+      } else {
+        memoryStorage.delete(token);
+      }
       return NextResponse.json(
         { error: 'Share-Link ist abgelaufen' },
         { status: 410 }
@@ -123,7 +163,15 @@ export async function GET(request: NextRequest) {
 
     // Increment access count
     linkData.accessCount += 1;
-    shareLinks.set(token, linkData);
+    
+    if (kvClient) {
+      const ttlSeconds = Math.floor((linkData.expiresAt - Date.now()) / 1000);
+      if (ttlSeconds > 0) {
+        await kvClient.setex(`share:${token}`, ttlSeconds, JSON.stringify(linkData));
+      }
+    } else {
+      memoryStorage.set(token, linkData);
+    }
 
     return NextResponse.json({
       success: true,
@@ -157,8 +205,19 @@ export async function DELETE(request: NextRequest) {
       );
     }
 
-    const exists = shareLinks.has(token);
-    shareLinks.delete(token);
+    const kvClient = await getKV();
+    let exists = false;
+
+    if (kvClient) {
+      const data = await kvClient.get(`share:${token}`);
+      exists = !!data;
+      if (exists) {
+        await kvClient.del(`share:${token}`);
+      }
+    } else {
+      exists = memoryStorage.has(token);
+      memoryStorage.delete(token);
+    }
 
     return NextResponse.json({
       success: true,

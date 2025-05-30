@@ -5,11 +5,10 @@ import { useParams } from 'next/navigation';
 import { KandidatenProfile } from '@/components/kandidaten-profile';
 import { ResumeSkeleton } from '@/components/ui/resume-skeleton';
 import { Clock, Shield, Eye, AlertTriangle, CheckCircle } from 'lucide-react';
-import { generateAnonymousCandidateName, generateAnonymousDocumentName } from '@/utils/anonymize-helpers';
-import { appConfig } from '@/config/app.config';
+import { generateAnonymousDocumentName } from '@/utils/anonymize-helpers';
 import type { Kandidat, AccountManager, NavigationItem } from '@/types/kandidat';
-import { transformKandidatenDaten } from '@/utils/data-transformer';
 import { pseudonymizeProfile } from '@/utils/pseudonymizer';
+import { appConfig } from '@/config/app.config';
 
 interface ShareLinkData {
   candidateId: string;
