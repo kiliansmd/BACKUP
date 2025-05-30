@@ -33,7 +33,7 @@ export default function Home() {
               <Image 
                 src="/logo-white.png" 
                 alt="Company Logo" 
-                width={32} 
+                width={214} 
                 height={32} 
                 className="object-contain"
               />
@@ -201,8 +201,8 @@ export default function Home() {
               <Image 
                 src="/logo-white.png" 
                 alt="Company Logo" 
-                width={24} 
-                height={24} 
+                width={214} 
+                height={32} 
               />
             </div>
             <div className="text-sm text-gray-400">
