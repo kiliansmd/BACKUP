@@ -10,38 +10,21 @@ import { Button } from '@/components/ui/button';
 import { ShareButton } from '@/components/ShareButton';
 import { generateAnonymousDocumentName, generateAnonymousCandidateName, extractSeniorityFromTitle } from '@/utils/anonymize-helpers';
 import { appConfig } from '@/config/app.config';
-
-interface Resume {
-  id: string;
-  name?: string;
-  title?: string;
-  fileName: string;
-  uploadedAt: {
-    _seconds: number;
-    _nanoseconds: number;
-  };
-  contact?: {
-    location_city?: string;
-    location_country?: string;
-  };
-  derived?: {
-    years_of_experience?: number;
-  };
-  skills?: string[];
-  senioritaet?: string;
-  lastViewed?: number; // Timestamp der letzten Ansicht
-  isNew?: boolean; // Computed: noch nie angesehen
-}
+import { Resume } from '@/lib/firebase';
 
 interface PaginationInfo {
   total: number;
   page: number;
   limit: number;
-  totalPages: number;
+  hasMore: boolean;
+}
+
+interface ResumeWithNew extends Resume {
+  isNew?: boolean;
 }
 
 export const ResumeList = () => {
-  const [resumes, setResumes] = useState<Resume[]>([]);
+  const [resumes, setResumes] = useState<ResumeWithNew[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [pagination, setPagination] = useState<PaginationInfo | null>(null);
@@ -65,7 +48,7 @@ export const ResumeList = () => {
     setError(null);
     
     try {
-      const params = new URLSearchParams(searchParams);
+      const params = searchParams ? new URLSearchParams(searchParams) : new URLSearchParams();
       const response = await fetch(`/api/get-resumes?${params.toString()}`);
       
       if (!response.ok) {
@@ -74,24 +57,30 @@ export const ResumeList = () => {
       
       const result = await response.json();
       
-      if (result.success && result.data) {
-        const resumesData = result.data.resumes || [];
-        
-        // Sort by upload date (newest first) and add isNew flag
-        const sortedResumes = resumesData
-          .sort((a: Resume, b: Resume) => {
-            return b.uploadedAt._seconds - a.uploadedAt._seconds;
-          })
-          .map((resume: Resume) => ({
-            ...resume,
-            isNew: !viewedResumes.has(resume.id)
-          }));
-        
-        setResumes(sortedResumes);
-        setPagination(result.data.pagination || null);
-      } else {
-        setResumes(result || []);
+      if (!result.success) {
+        throw new Error(result.error || 'Failed to fetch resumes');
       }
+
+      // Sort by upload date (newest first) and add isNew flag
+      const resumesData = (result.data.data || []) as Resume[];
+      const sortedResumes = resumesData
+        .sort((a: Resume, b: Resume) => {
+          const dateA = a.uploadedAt ? new Date(a.uploadedAt).getTime() : 0;
+          const dateB = b.uploadedAt ? new Date(b.uploadedAt).getTime() : 0;
+          return dateB - dateA;
+        })
+        .map((resume: Resume): ResumeWithNew => ({
+          ...resume,
+          isNew: !viewedResumes.has(resume.id)
+        }));
+      
+      setResumes(sortedResumes);
+      setPagination({
+        total: result.data.total,
+        page: result.data.page,
+        limit: result.data.limit,
+        hasMore: result.data.hasMore
+      });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch resumes');
     } finally {

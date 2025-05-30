@@ -20,19 +20,34 @@ import {
 import { Label } from '@/components/ui/label';
 import { debounce } from 'lodash';
 
-export function ResumeSearch() {
-  const router = useRouter();
+interface SearchUpdates {
+  query?: string;
+  seniority?: string;
+  location?: string;
+  experienceRange?: [number, number];
+  skills?: string[];
+  minExperience?: string;
+  maxExperience?: string;
+}
+
+export const ResumeSearch = () => {
   const searchParams = useSearchParams();
-  
-  const [query, setQuery] = useState(searchParams.get('query') || '');
-  const [seniority, setSeniority] = useState(searchParams.get('seniority') || '');
-  const [location, setLocation] = useState(searchParams.get('location') || '');
+  const router = useRouter();
+
+  // Safe access to search params with null checks
+  const getSearchParam = (key: string, defaultValue: string = ''): string => {
+    return searchParams?.get(key) || defaultValue;
+  };
+
+  const [query, setQuery] = useState(getSearchParam('query'));
+  const [seniority, setSeniority] = useState(getSearchParam('seniority'));
+  const [location, setLocation] = useState(getSearchParam('location'));
   const [experienceRange, setExperienceRange] = useState<[number, number]>([
-    parseInt(searchParams.get('minExperience') || '0'),
-    parseInt(searchParams.get('maxExperience') || '20')
+    parseInt(getSearchParam('minExperience', '0')),
+    parseInt(getSearchParam('maxExperience', '20'))
   ]);
   const [selectedSkills, setSelectedSkills] = useState<string[]>(
-    searchParams.get('skills')?.split(',').filter(Boolean) || []
+    getSearchParam('skills').split(',').filter(Boolean)
   );
 
   // Debounced search
@@ -43,27 +58,31 @@ export function ResumeSearch() {
     [router]
   );
 
-  const updateSearch = (updates: Record<string, string | string[] | number[]>) => {
-    const params = new URLSearchParams(searchParams);
+  const updateSearch = (updates: Partial<SearchUpdates>) => {
+    const params = new URLSearchParams(searchParams?.toString() || '');
     
     Object.entries(updates).forEach(([key, value]) => {
-      if (Array.isArray(value)) {
-        if (key === 'experienceRange') {
-          params.set('minExperience', value[0].toString());
-          params.set('maxExperience', value[1].toString());
-        } else if (value.length > 0) {
+      if (value === undefined) {
+        params.delete(key);
+      } else if (key === 'experienceRange' && Array.isArray(value)) {
+        params.set('minExperience', value[0].toString());
+        params.set('maxExperience', value[1].toString());
+      } else if (key === 'skills' && Array.isArray(value)) {
+        if (value.length > 0) {
           params.set(key, value.join(','));
         } else {
           params.delete(key);
         }
-      } else if (value) {
-        params.set(key, value.toString());
-      } else {
-        params.delete(key);
+      } else if (typeof value === 'string') {
+        if (value) {
+          params.set(key, value);
+        } else {
+          params.delete(key);
+        }
       }
     });
-    
-    performSearch(params);
+
+    router.push(`/resumes?${params.toString()}`);
   };
 
   const clearFilters = () => {

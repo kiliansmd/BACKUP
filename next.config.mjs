@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Für Vercel Deployment optimiert
+  // Optimiert für Vercel Deployment
   images: {
-    unoptimized: true,
+    unoptimized: false,
     remotePatterns: [
       {
         protocol: 'https',
@@ -22,20 +22,42 @@ const nextConfig = {
         source: '/api/:path*',
         destination: '/api/:path*',
       },
+      {
+        source: '/resume-parser/:path*',
+        destination: process.env.NEXT_PUBLIC_RESUME_PARSER_URL + '/:path*',
+      }
     ]
   },
   
-  // Entwicklungshilfen
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
+  // Strikte Typenprüfung in Produktion
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: process.env.NODE_ENV === 'development',
+  },
+  
+  // ESLint in Produktion aktiviert
+  eslint: {
+    ignoreDuringBuilds: process.env.NODE_ENV === 'development',
   },
 
-  // Experimentelle Funktionen für bessere Performance
+  // Optimierungen für Produktion
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
+
+  // Experimentelle Funktionen
   experimental: {
-    ppr: false
+    serverActions: {
+      allowedOrigins: ['localhost:3000', 'your-domain.vercel.app']
+    }
+  },
+
+  // Optimierungen für große Dateien
+  webpack: (config) => {
+    config.performance = {
+      maxEntrypointSize: 512000,
+      maxAssetSize: 512000,
+    }
+    return config
   }
 }
 

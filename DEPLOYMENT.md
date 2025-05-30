@@ -261,3 +261,181 @@ npm run build
 **🎉 Ready for Production!**
 
 The application is fully optimized for modern deployment platforms with automatic scaling, caching, and monitoring. 
+
+# Vercel Deployment Checkliste
+
+## Vor dem Deployment
+
+### 1. Umgebungsvariablen vorbereiten
+```bash
+# Firebase Admin SDK
+FIREBASE_PROJECT_ID=your-project-id
+FIREBASE_CLIENT_EMAIL=your-client-email
+FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nYour-Private-Key\n-----END PRIVATE KEY-----"
+
+# Resume Parser API
+NEXT_PUBLIC_RESUME_PARSER_API=your-api-key
+NEXT_PUBLIC_RESUME_PARSER_URL=https://api.resumeparser.com
+```
+
+### 2. Firebase-Konfiguration
+- [ ] Firebase-Projekt erstellt
+- [ ] Service Account erstellt und Schlüssel heruntergeladen
+- [ ] Firestore-Datenbank initialisiert
+- [ ] Firestore-Regeln konfiguriert
+- [ ] CORS-Einstellungen überprüft
+
+### 3. Lokale Tests
+```bash
+# Dependencies installieren
+npm install
+
+# TypeScript-Prüfung
+npm run type-check
+
+# Build testen
+npm run build
+
+# Linting
+npm run lint
+```
+
+## Deployment-Prozess
+
+### 1. Vercel CLI Installation (optional)
+```bash
+npm i -g vercel
+```
+
+### 2. Vercel Projekt einrichten
+- [ ] GitHub-Repository mit Vercel verbinden
+- [ ] Framework-Preset auf Next.js setzen
+- [ ] Build-Einstellungen überprüfen
+- [ ] Umgebungsvariablen in Vercel Dashboard eintragen
+
+### 3. Deployment-Einstellungen
+- [ ] Region auf "fra1" setzen
+- [ ] Build-Cache aktivieren
+- [ ] Serverless Function Limits anpassen
+- [ ] Edge Config aktivieren (optional)
+
+## Nach dem Deployment
+
+### 1. Funktionstest
+- [ ] Firebase-Verbindung testen
+- [ ] Resume-Parser-Integration testen
+- [ ] File Upload testen
+- [ ] PDF Export testen
+
+### 2. Performance
+- [ ] Lighthouse Score überprüfen
+- [ ] Core Web Vitals überprüfen
+- [ ] API Response Times monitoren
+
+### 3. Monitoring einrichten
+- [ ] Error Tracking aktivieren
+- [ ] Performance Monitoring aktivieren
+- [ ] Usage Alerts konfigurieren
+
+### 4. Backup & Recovery
+- [ ] Firestore Backup einrichten
+- [ ] Deployment Rollback-Strategie testen
+- [ ] Disaster Recovery Plan dokumentieren
+
+## Troubleshooting
+
+### Firebase Verbindungsprobleme
+1. Private Key Format überprüfen:
+   - Newlines müssen korrekt escaped sein
+   - Key muss in Anführungszeichen sein
+   - Keine zusätzlichen Spaces
+
+2. CORS-Fehler:
+   ```json
+   {
+     "origin": ["https://your-domain.vercel.app"],
+     "methods": ["GET", "POST", "PUT", "DELETE"],
+     "maxAgeSeconds": 3600
+   }
+   ```
+
+3. Firestore Timeouts:
+   - Prüfen Sie die Serverless Function Timeout-Einstellungen
+   - Erhöhen Sie ggf. die Memory-Allocation
+
+### Resume Parser Integration
+1. API Key Validation:
+   ```bash
+   curl -X POST https://api.resumeparser.com/validate \
+     -H "Authorization: Bearer $YOUR_API_KEY"
+   ```
+
+2. File Upload Limits:
+   - Maximum file size in `next.config.mjs` anpassen
+   - Vercel Payload Limits beachten
+
+## Sicherheits-Checkliste
+
+### 1. Umgebungsvariablen
+- [ ] Alle Secrets sind in Vercel gespeichert
+- [ ] Keine Hardcoded Credentials
+- [ ] Produktions-Keys sind separat von Development
+
+### 2. API-Sicherheit
+- [ ] Rate Limiting aktiviert
+- [ ] CORS korrekt konfiguriert
+- [ ] Authentication implementiert
+
+### 3. Firebase-Sicherheit
+- [ ] Firestore Rules sind restriktiv
+- [ ] Service Account hat minimale Berechtigungen
+- [ ] IP-Whitelist konfiguriert (wenn möglich)
+
+## Monitoring & Wartung
+
+### 1. Monitoring Setup
+```bash
+# Vercel Analytics aktivieren
+vercel analytics enable
+
+# Error Tracking einrichten
+vercel integrations add sentry
+```
+
+### 2. Regelmäßige Wartung
+- Wöchentliche Überprüfung der Logs
+- Monatliches Backup der Firestore-Daten
+- Vierteljährliche Überprüfung der Dependencies
+
+### 3. Alerts einrichten
+- Error Rate Threshold
+- Performance Degradation
+- Usage Limits
+
+## Rollback-Strategie
+
+### 1. Deployment Rollback
+```bash
+# Zur vorherigen Version zurückkehren
+vercel rollback
+
+# Spezifische Deployment-ID
+vercel rollback <deployment-id>
+```
+
+### 2. Daten-Rollback
+- Firestore Point-in-Time Recovery
+- Backup Restoration Prozess
+- Data Migration Rollback
+
+## Support & Dokumentation
+
+### Wichtige Links
+- [Vercel Dashboard](https://vercel.com/dashboard)
+- [Firebase Console](https://console.firebase.google.com)
+- [Next.js Dokumentation](https://nextjs.org/docs)
+
+### Support-Kontakte
+- Vercel Support: support@vercel.com
+- Firebase Support: firebase-support@google.com
+- Internal Support: devops@yourcompany.com 
