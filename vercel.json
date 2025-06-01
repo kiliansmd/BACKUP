@@ -1,0 +1,86 @@
+{
+  "version": 2,
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "framework": "nextjs",
+  "regions": ["fra1"],
+  "env": {
+    "FIREBASE_PROJECT_ID": "@firebase-project-id",
+    "FIREBASE_CLIENT_EMAIL": "@firebase-client-email",
+    "FIREBASE_PRIVATE_KEY": "@firebase-private-key",
+    "NEXT_PUBLIC_RESUME_PARSER_API": "@resume-parser-api-key",
+    "NEXT_PUBLIC_RESUME_PARSER_URL": "@resume-parser-url",
+    "NODE_ENV": "production"
+  },
+  "build": {
+    "env": {
+      "FIREBASE_PROJECT_ID": "@firebase-project-id",
+      "FIREBASE_CLIENT_EMAIL": "@firebase-client-email",
+      "FIREBASE_PRIVATE_KEY": "@firebase-private-key",
+      "NEXT_PUBLIC_RESUME_PARSER_API": "@resume-parser-api-key",
+      "NEXT_PUBLIC_RESUME_PARSER_URL": "@resume-parser-url"
+    }
+  },
+  "functions": {
+    "app/api/parse-resume/route.ts": {
+      "maxDuration": 30,
+      "memory": 1024,
+      "runtime": "nodejs20.x"
+    },
+    "app/api/get-resumes/route.ts": {
+      "maxDuration": 10,
+      "memory": 1024,
+      "runtime": "nodejs20.x"
+    },
+    "app/api/resume/[id]/route.ts": {
+      "maxDuration": 10,
+      "memory": 1024,
+      "runtime": "nodejs20.x"
+    },
+    "app/api/export-profile/route.ts": {
+      "maxDuration": 30,
+      "memory": 1024,
+      "runtime": "nodejs20.x"
+    }
+  },
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-XSS-Protection", "value": "1; mode=block" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
+      ]
+    },
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "s-maxage=60, stale-while-revalidate=30"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/robots.txt",
+      "destination": "/api/robots"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/home",
+      "destination": "/",
+      "permanent": true
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/cleanup",
+      "schedule": "0 0 * * *"
+    }
+  ]
+}
